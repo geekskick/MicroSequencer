@@ -7,21 +7,26 @@ end entity;
 
 architecture b of tb is
 
-    signal clk,z: std_logic;
-    signal IR : std_logic_vector(3 downto 0);
-    signal stop :  boolean := false;
+    signal clk, z, error: std_logic;
+    signal IR           : std_logic_vector(3 downto 0);
+    signal current_a    : std_logic_vector(5 downto 0);
+
+
+    signal stop     :  boolean := false;
     constant period : time:= 1ns;
     
     component microsequencer is
     port(
-        clk, z      : in std_logic;
-        instruction : in std_logic_vector(3 downto 0)
+        clk, z             : in std_logic;
+        instruction        : in std_logic_vector(3 downto 0);
+        ERROR              : out std_logic;
+        current_addr_out   : out std_logic_vector(5 downto 0)
     );
     end component microsequencer;
 
 begin
 
-    rs_cpu: microsequencer port map(clk, z, IR);
+    rs_cpu: microsequencer port map(clk, z, IR, error, current_a);
     
     clock: process
     begin

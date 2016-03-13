@@ -5,10 +5,10 @@ use ieee.numeric_std.all;
 
 entity microsequencer is
     port(
-        clk, z      : in std_logic;
-        instruction : in std_logic_vector(3 downto 0);
-	ERROR	     : out std_logic;
-	current_addr_out: out std_logic_vector(5 downto 0)
+        clk, z             : in std_logic;
+        instruction        : in std_logic_vector(3 downto 0);
+	    ERROR	           : out std_logic;
+	    current_addr_out   : out std_logic_vector(5 downto 0)
     );
 end entity microsequencer;
 
@@ -16,32 +16,36 @@ architecture behavioural of microsequencer is
 
 component rom is
 port( addr: in std_logic_vector(5 downto 0);
-	output: out std_logic_vector(9 downto 0)
+	output: out std_logic_vector(17 downto 0)
 );
 end component;
 
-    signal map_out	:std_logic_vector(5 downto 0):= (others => '0'); 		-- the IR value as an address
-    signal plus_one	:std_logic_vector(5 downto 0):= (others => '0');		-- the next microinstruction
+    signal map_out	    :std_logic_vector(5 downto 0):= (others => '0'); 		-- the IR value as an address
+    signal plus_one	    :std_logic_vector(5 downto 0):= (others => '0');		-- the next microinstruction
     signal return_add	:std_logic_vector(5 downto 0):= (others => '0');		-- the return from subroutine address
     signal next_addr	:std_logic_vector(5 downto 0):= (others => '0'); 		-- start at FETCH1
 
-    signal current_addr:std_logic_vector(5 downto 0):= (0 => '1', others => '0');	-- the selected address
+    signal current_addr :std_logic_vector(5 downto 0):= (0 => '1', others => '0');	-- the selected address
 
     signal logic_out	:std_logic_vector(1 downto 0):= (others => '0');		-- the control lines to select which address to use
-    signal mux_addr :std_logic_vector(5 downto 0):= (others => '0');		-- latched address
-    signal mem_out 	:std_logic_vector(9 downto 0):= (others => '0');		-- the output of the memory
+    signal mux_addr     :std_logic_vector(5 downto 0):= (others => '0');		-- latched address
+    signal mem_out 	    :std_logic_vector(17 downto 0):= (others => '0');		-- the output of the memory
 
-    signal cond		:std_logic_vector(1 downto 0):= (others => '0');		-- the condition from the microcode
-    signal BT		:std_logic_vector(1 downto 0):= (others => '0');		-- the branch type from the microcode
+    signal m1           :std_logic_vector(3 downto 0);                          -- micro operations selections from the microcode
+    signal m2           :std_logic_vector(2 downto 0);
+    signal m3           :std_logic;
+
+    signal cond		    :std_logic_vector(1 downto 0):= (others => '0');		-- the condition from the microcode
+    signal BT		    :std_logic_vector(1 downto 0):= (others => '0');		-- the branch type from the microcode
     
-    signal ldSR		:std_logic := '0';						-- load the subroutine register 
+    signal ldSR		    :std_logic := '0';						                -- load the subroutine register 
     
-
-
 
 begin
 
 	microcode: rom port map(current_addr, mem_out);
+
+    current_addr_out <= current_addr;
 
     ldSR <= '1' when BT = "01" else '0';
     map_out <= (instruction(3) & instruction(2) &instruction(1) &instruction(0) & "00");
@@ -100,9 +104,13 @@ begin
     end process;
 
     plus_one <= std_logic_vector(unsigned(current_addr) + 1);
-
-    cond 	<= mem_out(9 downto 8);
-    BT  	<= mem_out(7 downto 6);
+    
+    -- split up the memory output
+    BT          <= mem_out(17 downto 16);
+    cond 	    <= mem_out(15 downto 14);
+    m1          <= mem_out(13 downto 10);
+    m2          <= mem_out(9 downto 7);
+    m3          <= mem_out(6);
     next_addr	<= mem_out(5 downto 0);
 
 
