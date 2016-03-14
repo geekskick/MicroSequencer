@@ -17,11 +17,14 @@ architecture b of top_model is
     signal m1           : std_logic_vector(3 downto 0);
     signal m2           : std_logic_vector(2 downto 0);
 
-    signal nop1, arin, ardt, arpc, acin, aczo, acr, acdr, minu, plus, aand, oor, xxor, nnot, trdr: std_logic; --m1 signals
+    -- m1 microoperations
+    signal nop1, arin, ardt, arpc, acin, aczo, acr, acdr, minu, plus, aand, oor, xxor, nnot, trdr: std_logic; 
     
-    signal nop2, pcin, pddt, irdr, rac, mdr, drac, zalu: std_logic; -- m2 signal
+    -- m2 microoperations
+    signal nop2, pcin, pddt, irdr, rac, mdr, drac, zalu: std_logic; 
     
-    signal nop3, drm : std_logic; --m3 signal
+    --m3 microoperations
+    signal nop3, drm : std_logic; 
     
     component microsequencer is
     port(

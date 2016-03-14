@@ -25,7 +25,7 @@ end component;
     signal map_out      :std_logic_vector(5 downto 0):= (others => '0');        -- the IR value as an address
     signal plus_one     :std_logic_vector(5 downto 0):= (others => '0');        -- the next microinstruction
     signal return_add   :std_logic_vector(5 downto 0):= (others => '0');        -- the return from subroutine address
-    signal next_addr    :std_logic_vector(5 downto 0):= (others => '0');        -- start at FETCH1
+    signal next_addr    :std_logic_vector(5 downto 0):= (others => '0');        -- THE ADDRESS FROM THE MICROCODE
 
     signal current_addr :std_logic_vector(5 downto 0):= (0 => '1', others => '0');  -- the selected address
 
@@ -45,7 +45,10 @@ begin
 
     current_addr_out <= current_addr;
 
+    -- LATCH THE SUBROUTINE RETURN ADDRESS WHEN THE BRANCH TYPE IS A CALL
     ldSR <= '1' when BT = "01" else '0';
+
+    -- TURN THE INSTRUCTION REGISTER INPUT INTO A 6 BIT MICROCODE ADDRESS
     map_out <= (instruction(3) & instruction(2) &instruction(1) &instruction(0) & "00");
 
     with logic_out select mux_addr<=
@@ -55,6 +58,7 @@ begin
     return_add when "01",
         (others => '1') when others;
 
+    -- LATCH THE NEXT ADDRESS INTO THE SUBROUTINE RETURN REGISTER
     process(ldSR)
     begin
     if ldSR = '1' then
@@ -62,7 +66,7 @@ begin
     end if;
     end process;
 
-
+    -- CHOOSE THE NEXT ADDRESS BASED ON THE BRANCH TYPE, AND CONDITION
     process(BT, cond)
     begin
     case BT is
@@ -93,7 +97,7 @@ begin
     end case;
     end process;
 
-
+    -- WHEN THE CLOCK TICKS LATCH THE MUX OUTPUT TO THE CURRENT ADDRESS
     process(clk)
     begin
         if rising_edge(clk) then

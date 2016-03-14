@@ -8,6 +8,7 @@ end entity;
 
 architecture b of tb is
 
+    -- _i means a signal is internal to this entity only
     signal clk_i, z_i, error_i  : std_logic;
     signal IR_i                 : std_logic_vector(3 downto 0);
     signal current_a            : std_logic_vector(5 downto 0);
@@ -29,6 +30,7 @@ begin
 
     rs_cpu:top_model port map(z_i, clk_i, IR_i, error_i, current_a);
     
+    -- makes the clock tick
     clock: process
     begin
         while not STOP loop
@@ -44,6 +46,7 @@ begin
     stim: process
     begin
     
+        -- loop through the possible instruction register values, with the zero flag set
         IR_i <= "0000"; --nop
         z_i <= '1';
         
