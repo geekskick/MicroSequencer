@@ -1,39 +1,40 @@
 -- Code your testbench here
 library IEEE;
 use IEEE.std_logic_1164.all;
+use ieee.numeric_std.all;
 
 entity tb is
 end entity;
 
 architecture b of tb is
 
-    signal clk, z, error: std_logic;
-    signal IR           : std_logic_vector(3 downto 0);
-    signal current_a    : std_logic_vector(5 downto 0);
+    signal clk_i, z_i, error_i  : std_logic;
+    signal IR_i                 : std_logic_vector(3 downto 0);
+    signal current_a            : std_logic_vector(5 downto 0);
 
-
+    -- test bench control signals
     signal stop     :  boolean := false;
     constant period : time:= 1ns;
     
-    component microsequencer is
-    port(
-        clk, z             : in std_logic;
-        instruction        : in std_logic_vector(3 downto 0);
-        ERROR              : out std_logic;
-        current_addr_out   : out std_logic_vector(5 downto 0)
+    component top_model is
+    port( 
+        z, clk  : in std_logic;
+        IR      : in std_logic_vector(3 downto 0);
+        error   : out std_logic;
+        curr_add: out std_logic_vector(5 downto 0)
     );
-    end component microsequencer;
+    end component;
 
 begin
 
-    rs_cpu: microsequencer port map(clk, z, IR, error, current_a);
+    rs_cpu:top_model port map(z_i, clk_i, IR_i, error_i, current_a);
     
     clock: process
     begin
         while not STOP loop
-            clk <= '1';
+            clk_i <= '1';
             wait for period/2;
-            clk <= '0';
+            clk_i <= '0';
             wait for period/2;
         end loop;
         wait;
@@ -43,23 +44,43 @@ begin
     stim: process
     begin
     
-        IR<= "0000"; --nop
-        z <= '1';
+        IR_i <= "0000"; --nop
+        z_i <= '1';
         
-        wait for 4 * period;
+        wait for 8 * period;
+        IR_i <= std_logic_vector(unsigned(IR_i) + 1);
+        wait for 8 * period;
+        IR_i <= std_logic_vector(unsigned(IR_i) + 1);
+        wait for 8 * period;
+        IR_i <= std_logic_vector(unsigned(IR_i) + 1);
+        wait for 8 * period;
+        IR_i <= std_logic_vector(unsigned(IR_i) + 1);
+        wait for 8 * period;
+        IR_i <= std_logic_vector(unsigned(IR_i) + 1);
+        wait for 8 * period;
+        IR_i <= std_logic_vector(unsigned(IR_i) + 1);
+        wait for 8 * period;
+        IR_i <= std_logic_vector(unsigned(IR_i) + 1);
+        wait for 8 * period;
+        IR_i <= std_logic_vector(unsigned(IR_i) + 1);
+        wait for 8 * period;
+        IR_i <= std_logic_vector(unsigned(IR_i) + 1);
+        wait for 8 * period;
+        IR_i <= std_logic_vector(unsigned(IR_i) + 1);
+        wait for 8 * period;
+        IR_i <= std_logic_vector(unsigned(IR_i) + 1);
+        wait for 8 * period;
+        IR_i <= std_logic_vector(unsigned(IR_i) + 1);
+        wait for 8 * period;
+        IR_i <= std_logic_vector(unsigned(IR_i) + 1);
+        wait for 8 * period;
+        IR_i <= std_logic_vector(unsigned(IR_i) + 1);
+        wait for 8 * period;
+        IR_i <= std_logic_vector(unsigned(IR_i) + 1);
+        wait for 8 * period;
+        IR_i <= std_logic_vector(unsigned(IR_i) + 1);
+        wait for 8 * period;
         
-        IR <= "0001"; --ldac
-        wait for 9 * period;
-        
-        IR <= "0010"; --sdac
-        wait for 9 * period;
-        
-        IR <= "0100"; --jump if z
-        wait for 9 * period;
-        
-        z <= '0';
-        wait for 9 * period;
-
         stop <= true;
         wait;
 
