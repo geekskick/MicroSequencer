@@ -55,7 +55,7 @@ begin
         plus_one when "00",
         next_addr when "10",
         map_out when "11",
-    return_add when "01",
+          return_add when "01",
         (others => '1') when others;
 
     -- LATCH THE NEXT ADDRESS INTO THE SUBROUTINE RETURN REGISTER
@@ -69,6 +69,7 @@ begin
     -- CHOOSE THE NEXT ADDRESS BASED ON THE BRANCH TYPE, AND CONDITION
     process(BT, cond)
     begin
+    logic_out <= "00"; -- must have a default to prevent latches being used
     case BT is
                         -- JUMP
         when "00" => 
