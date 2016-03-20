@@ -1,0 +1,127 @@
+# Reading C:/altera/13.0sp1/modelsim_ase/tcl/vsim/pref.tcl 
+# do top_model_run_msim_rtl_vhdl.do 
+# if {[file exists rtl_work]} {
+# 	vdel -lib rtl_work -all
+# }
+# vlib rtl_work
+# vmap work rtl_work
+# Copying C:\altera\13.0sp1\modelsim_ase\win32aloem/../modelsim.ini to modelsim.ini
+# Modifying modelsim.ini
+# ** Warning: Copied C:\altera\13.0sp1\modelsim_ase\win32aloem/../modelsim.ini to modelsim.ini.
+#          Updated modelsim.ini.
+# 
+# vcom -93 -work work {C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/control_unit_2/top_model.vhd}
+# Model Technology ModelSim ALTERA vcom 10.1d Compiler 2012.11 Nov  2 2012
+# -- Loading package STANDARD
+# -- Loading package TEXTIO
+# -- Loading package std_logic_1164
+# -- Loading package NUMERIC_STD
+# -- Compiling entity top_model
+# -- Compiling architecture b of top_model
+# vcom -93 -work work {C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/control_unit_2/seg.vhd}
+# Model Technology ModelSim ALTERA vcom 10.1d Compiler 2012.11 Nov  2 2012
+# -- Loading package STANDARD
+# -- Loading package TEXTIO
+# -- Loading package std_logic_1164
+# -- Loading package NUMERIC_STD
+# -- Compiling entity seg
+# -- Compiling architecture behave of seg
+# vcom -93 -work work {C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/control_unit_2/four_bit_decoder.vhd}
+# Model Technology ModelSim ALTERA vcom 10.1d Compiler 2012.11 Nov  2 2012
+# -- Loading package STANDARD
+# -- Loading package TEXTIO
+# -- Loading package std_logic_1164
+# -- Loading package NUMERIC_STD
+# -- Compiling entity four_bit_decoder
+# -- Compiling architecture behave of four_bit_decoder
+# vcom -93 -work work {C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/control_unit_2/three_bit_decoder.vhd}
+# Model Technology ModelSim ALTERA vcom 10.1d Compiler 2012.11 Nov  2 2012
+# -- Loading package STANDARD
+# -- Loading package TEXTIO
+# -- Loading package std_logic_1164
+# -- Loading package NUMERIC_STD
+# -- Compiling entity three_bit_decoder
+# -- Compiling architecture behave of three_bit_decoder
+# vcom -93 -work work {C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/control_unit_2/one_bit_decoder.vhd}
+# Model Technology ModelSim ALTERA vcom 10.1d Compiler 2012.11 Nov  2 2012
+# -- Loading package STANDARD
+# -- Loading package TEXTIO
+# -- Loading package std_logic_1164
+# -- Loading package NUMERIC_STD
+# -- Compiling entity one_bit_decoder
+# -- Compiling architecture behave of one_bit_decoder
+# vcom -93 -work work {C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/control_unit_2/microsequencer.vhd}
+# Model Technology ModelSim ALTERA vcom 10.1d Compiler 2012.11 Nov  2 2012
+# -- Loading package STANDARD
+# -- Loading package TEXTIO
+# -- Loading package std_logic_1164
+# -- Loading package NUMERIC_STD
+# -- Compiling entity microsequencer
+# -- Compiling architecture behavioural of microsequencer
+# vcom -93 -work work {C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/control_unit_2/rom.vhd}
+# Model Technology ModelSim ALTERA vcom 10.1d Compiler 2012.11 Nov  2 2012
+# -- Loading package STANDARD
+# -- Loading package TEXTIO
+# -- Loading package std_logic_1164
+# -- Loading package NUMERIC_STD
+# -- Compiling entity rom
+# -- Compiling architecture struct of rom
+# 
+vsim -voptargs=+acc work.top_model
+# vsim -voptargs=+acc work.top_model 
+# Loading std.standard
+# Loading std.textio(body)
+# Loading ieee.std_logic_1164(body)
+# Loading ieee.numeric_std(body)
+# Loading work.top_model(b)
+# Loading work.seg(behave)
+# Loading work.four_bit_decoder(behave)
+# Loading work.three_bit_decoder(behave)
+# Loading work.one_bit_decoder(behave)
+# Loading work.microsequencer(behavioural)
+# Loading work.rom(struct)
+add wave -position insertpoint sim:/top_model/*
+force -freeze sim:/top_model/clk 1 0, 0 {50 ps} -r 100
+force -freeze sim:/top_model/IR 0000 0
+run
+# ** Warning: NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+#    Time: 0 ps  Iteration: 0  Instance: /top_model/ALUSEL
+# ** Warning: NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+#    Time: 0 ps  Iteration: 0  Instance: /top_model/LDigit
+# ** Warning: NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+#    Time: 0 ps  Iteration: 0  Instance: /top_model/HDigit
+# ** Warning: NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+#    Time: 0 ps  Iteration: 1  Instance: /top_model/HDigit
+run
+run
+run
+run
+run
+run
+run
+force -freeze sim:/top_model/IR 0001 0
+run
+run
+run
+run
+run
+run
+run
+run
+run
+force -freeze sim:/top_model/z 0 0
+force -freeze sim:/top_model/IR 0110 0
+run
+run
+run
+run
+run
+run
+force -freeze sim:/top_model/z 1 0
+run
+run
+run
+run
+run
+run
+run

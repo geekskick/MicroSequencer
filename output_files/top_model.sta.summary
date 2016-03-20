@@ -1,0 +1,77 @@
+------------------------------------------------------------
+TimeQuest Timing Analyzer Summary
+------------------------------------------------------------
+
+Type  : Slow 1200mV 85C Model Setup 'clk'
+Slack : -3.214
+TNS   : -19.024
+
+Type  : Slow 1200mV 85C Model Setup 'microsequencer:mseq|current_addr[0]'
+Slack : -0.226
+TNS   : -0.683
+
+Type  : Slow 1200mV 85C Model Hold 'microsequencer:mseq|current_addr[0]'
+Slack : -4.624
+TNS   : -18.114
+
+Type  : Slow 1200mV 85C Model Hold 'clk'
+Slack : -1.157
+TNS   : -6.648
+
+Type  : Slow 1200mV 85C Model Minimum Pulse Width 'clk'
+Slack : -3.000
+TNS   : -10.710
+
+Type  : Slow 1200mV 85C Model Minimum Pulse Width 'microsequencer:mseq|current_addr[0]'
+Slack : -1.285
+TNS   : -42.806
+
+Type  : Slow 1200mV 0C Model Setup 'clk'
+Slack : -2.694
+TNS   : -15.969
+
+Type  : Slow 1200mV 0C Model Setup 'microsequencer:mseq|current_addr[0]'
+Slack : -0.295
+TNS   : -0.966
+
+Type  : Slow 1200mV 0C Model Hold 'microsequencer:mseq|current_addr[0]'
+Slack : -4.169
+TNS   : -15.944
+
+Type  : Slow 1200mV 0C Model Hold 'clk'
+Slack : -1.167
+TNS   : -6.761
+
+Type  : Slow 1200mV 0C Model Minimum Pulse Width 'clk'
+Slack : -3.000
+TNS   : -10.710
+
+Type  : Slow 1200mV 0C Model Minimum Pulse Width 'microsequencer:mseq|current_addr[0]'
+Slack : -1.285
+TNS   : -39.392
+
+Type  : Fast 1200mV 0C Model Setup 'clk'
+Slack : -1.206
+TNS   : -7.113
+
+Type  : Fast 1200mV 0C Model Setup 'microsequencer:mseq|current_addr[0]'
+Slack : 0.167
+TNS   : 0.000
+
+Type  : Fast 1200mV 0C Model Hold 'microsequencer:mseq|current_addr[0]'
+Slack : -2.400
+TNS   : -9.521
+
+Type  : Fast 1200mV 0C Model Hold 'clk'
+Slack : -0.668
+TNS   : -3.793
+
+Type  : Fast 1200mV 0C Model Minimum Pulse Width 'clk'
+Slack : -3.000
+TNS   : -10.686
+
+Type  : Fast 1200mV 0C Model Minimum Pulse Width 'microsequencer:mseq|current_addr[0]'
+Slack : -1.000
+TNS   : -19.019
+
+------------------------------------------------------------
