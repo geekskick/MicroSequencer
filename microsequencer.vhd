@@ -6,7 +6,7 @@ use ieee.numeric_std.all;
 entity microsequencer is
     port(
         clk, z             : in std_logic;
-        instruction        : in std_logic_vector(3 downto 0);
+        instruction        : in std_logic_vector(4 downto 0);
         current_addr_out   : out std_logic_vector(5 downto 0);
         m1                 : out std_logic_vector(3 downto 0);
         m2                 : out std_logic_vector(2 downto 0);
@@ -49,13 +49,13 @@ begin
     ldSR <= '1' when BT = "01" else '0';
 
     -- TURN THE INSTRUCTION REGISTER INPUT INTO A 6 BIT MICROCODE ADDRESS
-    map_out <= (instruction(3) & instruction(2) &instruction(1) &instruction(0) & "00");
+    map_out <= (instruction(4) & instruction(3) & instruction(2) &instruction(1) &instruction(0) & "0");
 
     with logic_out select mux_addr<=
         plus_one when "00",
         next_addr when "10",
         map_out when "11",
-		  return_add when "01",
+		return_add when "01",
         (others => '1') when others;
 
     -- LATCH THE NEXT ADDRESS INTO THE SUBROUTINE RETURN REGISTER
@@ -69,7 +69,9 @@ begin
     -- CHOOSE THE NEXT ADDRESS BASED ON THE BRANCH TYPE, AND CONDITION
     process(BT, cond, z)
     begin
-	 logic_out <= "11"; -- default value for logic_out provided so that latches aren't created and muxes used instead
+
+	-- logic_out <= "11"; -- default value for logic_out provided so that latches aren't created and muxes used instead
+
     case BT is
                         -- JUMP
         when "00" => 
@@ -113,8 +115,8 @@ begin
     cond        <= mem_out(15 downto 14);
     m1          <= mem_out(13 downto 10);
     m2          <= mem_out(9 downto 7);
-    m3          <= mem_out(6);
-    next_addr   <= mem_out(5 downto 0);
+    m3          <= mem_out(6 downto 5);
+    next_addr   <= mem_out(4 downto 0);
 
 
 end architecture behavioural;
