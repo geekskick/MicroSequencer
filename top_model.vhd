@@ -11,7 +11,7 @@ entity top_model is
 		  -- COMMAND SIGNALS
 		  error, ARLOAD, ARINC, R, W, MEMBUS, BUSMEM, PCINC, PCLOAD, PCBUS, DRLBUS, DRHBUS, DRLOAD, TRLOAD, TRBUS, IRLOAD, RLOAD, RBUS, ACLOAD, ACBUS, ZLOAD	: out std_logic;
 
-		  alu_cmd : out std_logic_vector(3 downto 0);
+		  alu_cmd : out std_logic_vector(3 downto 0); -- TO THE ALU INPUT
        
 		  --segment displayers
 		  curr_add_H: out std_logic_vector(6 downto 0); -- HIGH NIBBLE OF CURRENT MICROCODE ADDRESS
@@ -37,7 +37,7 @@ architecture structure of top_model is
 	 signal haddr			: std_logic_vector(3 downto 0);
 
     -- MICROOPERATIONS
-    signal nop1, nop2, nop3, arin, ardt, arpc, acin, aczo, acr, acdr, minu, plus, aand, oor, xxor, nnot, trdr, pcin, pcdt, irdr, rac, mdr, drac, zalu, drm, lshift, rshift:std_logic;
+    signal nop1, nop2, nop3, arin, ardt, arpc, acin, aczo, acr, acdr, minu, plus, aand, oor, xxor, nnot, trdr, pcin, pcdt, irdr, rac, mdr, drac, zalu, drm, lshift, rshift	:std_logic;
     
 	 -- COMPONENT DECLARATIONS FOLLOW
     component microsequencer is
@@ -51,14 +51,7 @@ architecture structure of top_model is
         alu                : out std_logic_vector(3 downto 0)
     );
     end component microsequencer;
-    
-	 -- DECODERS FOR THE MICROOPERATIONS FIELDS
-    component four_bit_decoder is
-    port(
-        input   : in std_logic_vector(3 downto 0);
-        O0, O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15 : out std_logic
-    );
-    end component four_bit_decoder;
+   
 
     component three_bit_decoder is
     port(
@@ -92,14 +85,14 @@ begin
 	ALUSEL  : seg port map(ALUSELECT, CURr_aLU_S);						-- THE ALU SELECT VALUE DISPLAY
 
 	-- DECODER INSTANTIATION, WHERE EACH MICROCODE FIELD (M1, M2, M3) GETS IT'S OWN DECODER
-    m1_ops   : four_bit_decoder port map(m1, nop1, arin, ardt, arpc, acin, aczo, acr, acdr, minu, plus, aand, oor, xxor, nnot, trdr, error);
+    m1_ops   : three_bit_decoder port map(m1, nop1, arin, ardt, trdr, error, acr, acdr);
     m2_ops   : three_bit_decoder port map(m2, nop2, pcin, pcdt, irdr, rac, mdr, drac, zalu);
-    -- m3_ops   : one_bit_decoder port map(m3, nop3, drm); needs to b three bits
+    m3_ops   : one_bit_decoder port map(m3, nop3, drm); needs to b three bits
     
 	 -- INSTANTIATE THE MICROSEQUENCER
     mseq    : microsequencer port map(clk, z, IR, curr_add, m1, m2, m3, ALUSELECT);
     
-	 -- COMMAND SIGNALS, NEEDS REMOVING TO MAKE A SEPARATE MODULE 
+	 -- COMMAND SIGNALS AND WHEN THEY ARE ACTIVE
 	 ARLOAD <= arpc 	or ardt;
 	 ARINC 	<= arin;
 	 R 		<= drm;

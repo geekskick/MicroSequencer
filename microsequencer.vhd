@@ -8,9 +8,10 @@ entity microsequencer is
         clk, z             : in std_logic;
         instruction        : in std_logic_vector(4 downto 0);
         current_addr_out   : out std_logic_vector(5 downto 0);
-        m1                 : out std_logic_vector(3 downto 0);
+        m1                 : out std_logic_vector(2 downto 0);
         m2                 : out std_logic_vector(2 downto 0);
-        m3                 : out std_logic
+        m3                 : out std_logic;
+        aluselect          : out std_logic_vector(3 downto 0)
     );
 end entity microsequencer;
 
@@ -18,7 +19,7 @@ architecture behavioural of microsequencer is
 
 component rom is
 port( addr: in std_logic_vector(5 downto 0);
-    output: out std_logic_vector(17 downto 0)
+    output: out std_logic_vector(20 downto 0)
 );
 end component;
 
@@ -31,7 +32,7 @@ end component;
 
     signal logic_out    :std_logic_vector(1 downto 0):= (others => '0');        -- the control lines to select which address to use
     signal mux_addr     :std_logic_vector(5 downto 0):= (others => '0');        -- latched address
-    signal mem_out      :std_logic_vector(17 downto 0):= (others => '0');       -- the output of the memory
+    signal mem_out      :std_logic_vector(20 downto 0):= (others => '0');       -- the output of the memory
 
     signal cond         :std_logic_vector(1 downto 0):= (others => '0');        -- the condition from the microcode
     signal BT           :std_logic_vector(1 downto 0):= (others => '0');        -- the branch type from the microcode
@@ -75,21 +76,23 @@ begin
     case BT is
                         -- JUMP
         when "00" => 
-        if cond = "11" then
-            logic_out <= "10";
-        elsif cond = "00" then
-            if z = '1' then
-            logic_out <= "10";  -- if z is set then use the microcode address
-            else
-            logic_out <= "00";  -- if z is clr then use the next microinstruction
+            if cond = "11" then
+                logic_out <= "10";
+            elsif cond = "00" then
+                if z = '1' then
+                logic_out <= "10";  -- if z is set then use the microcode address
+                else
+                logic_out <= "00";  -- if z is clr then use the next microinstruction
+                end if;
+            elsif cond = "01" then
+                if z = '0' then
+                logic_out <= "10";  -- if z is clr then use the microcode address
+                else
+                logic_out <= "00";  -- if z is set then use the next microinstruction
+                end if;
+            else                    -- in the case of a don't care
+                logic_out <= "00";  -- doesn't matter shouldn't be executed!
             end if;
-        elsif cond = "01" then
-            if z = '0' then
-            logic_out <= "10";  -- if z is clr then use the microcode address
-            else
-            logic_out <= "00";  -- if z is set then use the next microinstruction
-            end if;
-        end if;
                         -- CALL
         when "01" => logic_out <= "10"; -- use the microcode address
                         -- MAP
@@ -111,12 +114,13 @@ begin
     plus_one <= std_logic_vector(unsigned(current_addr) + 1);
     
     -- split up the memory output
-    BT          <= mem_out(17 downto 16);
-    cond        <= mem_out(15 downto 14);
-    m1          <= mem_out(13 downto 10);
-    m2          <= mem_out(9 downto 7);
-    m3          <= mem_out(6 downto 5);
-    next_addr   <= mem_out(4 downto 0);
+    BT          <= mem_out(20 downto 19);
+    cond        <= mem_out(18 downto 17);
+    m1          <= mem_out(16 downto 14);
+    m2          <= mem_out(13 downto 11);
+    m3          <= mem_out(10);
+    aluselect   <= mem_out(9 downto 6);
+    next_addr   <= mem_out(5 downto 0);
 
 
 end architecture behavioural;
