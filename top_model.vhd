@@ -36,7 +36,7 @@ architecture b of top_model is
 	 SIGNAL ALUSELECT 	: std_logic_vector(3 downto 0);
 
     -- MICROOPERATIONS
-    signal nop1, nop2, nop3, arin, ardt, arpc, acin, aczo, acr, acdr, minu, plus, aand, oor, xxor, nnot, trdr, pcin, pcdt, irdr, rac, mdr, drac, zalu, drm:std_logic;
+    signal nop1, nop2, nop3, arin, ardt, arpc, acin, aczo, acr, acdr, minu, plus, aand, oor, xxor, nnot, trdr, pcin, pcdt, irdr, rac, mdr, drac, zalu, drm:std_logic:= '0';
     
 	 -- COMPONENT DECLARATIONS FOLLOW
     component microsequencer is
