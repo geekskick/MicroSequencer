@@ -8,9 +8,9 @@ entity microsequencer is
         clk, z             : in std_logic;
         instruction        : in std_logic_vector(3 downto 0);
         current_addr_out   : out std_logic_vector(5 downto 0);
-        m1                 : out std_logic_vector(3 downto 0);
-        m2                 : out std_logic_vector(2 downto 0);
-        m3                 : out std_logic
+        m1                 : out std_logic_vector(3 downto 0):= (others => '0');
+        m2                 : out std_logic_vector(2 downto 0):= (others => '0');
+        m3                 : out std_logic:= '0'
     );
 end entity microsequencer;
 
@@ -38,9 +38,12 @@ end component;
     
     signal ldSR         :std_logic := '0';                                      -- load the subroutine register 
     
+	 signal nclk : std_logic;
 
 begin
 
+	nclk <= not clk;
+	
     microcode: rom port map(current_addr, mem_out);
 
     current_addr_out <= current_addr;
@@ -69,9 +72,10 @@ begin
     -- CHOOSE THE NEXT ADDRESS BASED ON THE BRANCH TYPE, AND CONDITION
     process(BT, cond, z)
     begin
-	 logic_out <= "11"; -- default value for logic_out provided so that latches aren't created and muxes used instead
+	
+	logic_out <= "11"; -- default value for logic_out provided so that latches aren't created and muxes used instead
     case BT is
-                        -- JUMP
+         -- JUMP
         when "00" => 
         if cond = "11" then
             logic_out <= "10";
@@ -88,7 +92,8 @@ begin
             logic_out <= "00";  -- if z is set then use the next microinstruction
             end if;
         end if;
-                        -- CALL
+        
+		  -- CALL
         when "01" => logic_out <= "10"; -- use the microcode address
                         -- MAP
         when "10" => logic_out <= "11"; -- use the IR value
@@ -99,9 +104,9 @@ begin
     end process;
 
     -- WHEN THE CLOCK TICKS LATCH THE MUX OUTPUT TO THE CURRENT ADDRESS
-    process(clk)
+    process(nclk)
     begin
-        if rising_edge(clk) then
+        if rising_edge(nclk) then
             current_addr <= mux_addr;
         end if;
     end process;

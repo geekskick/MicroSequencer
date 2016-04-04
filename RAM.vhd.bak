@@ -1,0 +1,41 @@
+-- Random Access Memory (RAM) with
+LIBRARY IEEE;
+    USE IEEE.STD_LOGIC_1164.ALL;
+    USE IEEE.STD_LOGIC_UNSIGNED.ALL;
+
+ENTITY RAM IS
+  PORT(
+       DATAIN : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
+       ADDRESS : IN STD_LOGIC_VECTOR(15 DOWNTO 0);
+       Wr : IN STD_LOGIC;
+		 Re : IN STD_LOGIC;
+       DATAOUT : OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
+       );
+END ENTITY;
+
+-- RAM architecture
+ARCHITECTURE BEV OF RAM IS
+--if 16 bit dosn't work change pins of address to 7downto0 and 65535 to 255
+TYPE MEM IS ARRAY (65535 DOWNTO 0) OF STD_LOGIC_VECTOR(7 DOWNTO 0);
+SIGNAL MEMORY : MEM;
+SIGNAL ADDR : INTEGER RANGE 0 TO 65536; 
+
+-- maximum number for an 16 bit unsigned integer is 65535, this number is '10000000000000000' rather than '1111111111111111' plus you're only addressing a maximum or 65535 in the array - PM 17th March
+
+BEGIN
+
+  PROCESS(ADDRESS, DATAIN, Wr, Re)
+  BEGIN
+
+  -- richard said that latches are bad, and it's supported by that doulous site, get around it by putting a default value of stuff in processes eg initialise the memory to "00000000" and the dataout to "zzzzzz". Can chat about it face to face i think would be easier. - PM 17th March
+    ADDR<=CONV_INTEGER(ADDRESS);
+    IF(Re='1')THEN
+      MEMORY(ADDR)<=DATAIN;
+    ELSIF(Wr='1')THEN
+      DATAOUT<=MEMORY(ADDR);
+    ELSE
+      DATAOUT<="ZZZZZZZZ";
+    END IF;
+  END PROCESS;
+
+END BEV;
