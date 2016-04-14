@@ -1,0 +1,480 @@
+m255
+K3
+13
+cModel Technology
+Z0 dC:\Users\nggmlgm\Documents\Academic\College\Y3\VHDL\CU_REG\simulation\modelsim
+Ealu
+Z1 w1460535491
+Z2 DPx4 ieee 11 numeric_std 0 22 O3PF8EB`?j9=z7KT`fn941
+Z3 DPx3 std 6 textio 0 22 5>J:;AW>W0[[dW0I6EN1Q0
+Z4 DPx4 ieee 14 std_logic_1164 0 22 5=aWaoGZSMWIcH0i^f`XF1
+Z5 dC:\Users\nggmlgm\Documents\Academic\College\Y3\VHDL\CU_REG\simulation\modelsim
+Z6 8C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/alu.vhd
+Z7 FC:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/alu.vhd
+l0
+L7
+V92]L2>SNTTf>hzTgnPLUo3
+!s100 =6FR68JWVP;<:9m8d^UcY0
+Z8 OV;C;10.1d;51
+31
+!i10b 1
+Z9 !s108 1460568331.694000
+Z10 !s90 -reportprogress|300|-93|-work|work|C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/alu.vhd|
+Z11 !s107 C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/alu.vhd|
+Z12 o-93 -work work -O0
+Z13 tExplicit 1
+Abehavior
+R2
+R3
+R4
+DEx4 work 3 alu 0 22 92]L2>SNTTf>hzTgnPLUo3
+l19
+L17
+V9z5L@c:TiBQD<D8H@SSD@0
+!s100 ;UBlT[DbJJgRTimO7[OTW1
+R8
+31
+!i10b 1
+R9
+R10
+R11
+R12
+R13
+Ebuff
+Z14 w1459436889
+R3
+R4
+R5
+Z15 8C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/buff.vhd
+Z16 FC:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/buff.vhd
+l0
+L5
+V4mKHh_V09Q=<azWMf5`z:1
+R8
+31
+Z17 !s108 1460568328.137000
+Z18 !s90 -reportprogress|300|-93|-work|work|C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/buff.vhd|
+Z19 !s107 C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/buff.vhd|
+R12
+R13
+!s100 ;Tgf]8comC;Pbma@Q5M8U0
+!i10b 1
+Abehav
+R3
+R4
+DEx4 work 4 buff 0 22 4mKHh_V09Q=<azWMf5`z:1
+l17
+L15
+VU97hCGhFEgS]1zFZV>?6c3
+R8
+31
+R17
+R18
+R19
+R12
+R13
+!s100 Jed44[_bn`z=d7CNAJY0X0
+!i10b 1
+Ecu_reg
+Z20 w1460566570
+R2
+R3
+R4
+R5
+Z21 8C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/cu_reg.vhd
+Z22 FC:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/cu_reg.vhd
+l0
+L5
+VobV8K;d:1Sd:ko[QaZG9H3
+R8
+31
+Z23 !s108 1460568331.257000
+Z24 !s90 -reportprogress|300|-93|-work|work|C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/cu_reg.vhd|
+Z25 !s107 C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/cu_reg.vhd|
+R12
+R13
+!s100 VYcl^k_DF<h<jFV[CEM>D1
+!i10b 1
+Astruct
+R2
+R3
+R4
+DEx4 work 6 cu_reg 0 22 obV8K;d:1Sd:ko[QaZG9H3
+l113
+L11
+VSALDeP]0CSLRO_Vl5n_mW3
+R8
+31
+R23
+R24
+R25
+R12
+R13
+!s100 ifi>4XYD:lEfZOCjBW=Kd0
+!i10b 1
+Einstreg
+Z26 w1459437358
+R3
+R4
+R5
+Z27 8C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/instreg.vhd
+Z28 FC:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/instreg.vhd
+l0
+L3
+V6?SBFDDGXT8^zGzQ]UFRe3
+R8
+31
+Z29 !s108 1460568330.945000
+Z30 !s90 -reportprogress|300|-93|-work|work|C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/instreg.vhd|
+Z31 !s107 C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/instreg.vhd|
+R12
+R13
+!s100 P5CWkPSiDoO[2m3F_ZIX<2
+!i10b 1
+Ainstreg
+R3
+R4
+DEx4 work 7 instreg 0 22 6?SBFDDGXT8^zGzQ]UFRe3
+l15
+L13
+VeEEKBI?e;6[Nf7PSDKbEN2
+R8
+31
+R29
+R30
+R31
+R12
+R13
+!s100 MnQ3b9]4HLEzf4hZ^=_Q01
+!i10b 1
+Emicrosequencer
+Z32 w1460538984
+R2
+R3
+R4
+R5
+Z33 8C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/microsequencer.vhd
+Z34 FC:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/microsequencer.vhd
+l0
+L6
+VjI4`_>D6U6lJK0^maQ_Cg3
+R8
+31
+Z35 !s108 1460568330.524000
+Z36 !s90 -reportprogress|300|-93|-work|work|C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/microsequencer.vhd|
+Z37 !s107 C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/microsequencer.vhd|
+R12
+R13
+!s100 >jVVbJ]A=P>E[7]IHQYdo3
+!i10b 1
+Abehavioural
+R2
+R3
+R4
+DEx4 work 14 microsequencer 0 22 jI4`_>D6U6lJK0^maQ_Cg3
+l43
+L18
+VE44]B6nfe?R>omd12VIC_1
+R8
+31
+R35
+R36
+R37
+R12
+R13
+!s100 _a4R]LT[MQDRfOG]O:zJ^0
+!i10b 1
+Eone_bit_decoder
+Z38 w1458030811
+R2
+R3
+R4
+R5
+Z39 8C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/one_bit_decoder.vhd
+Z40 FC:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/one_bit_decoder.vhd
+l0
+L6
+V?6J4V1]VWN;4zlVJAi>Ml1
+R8
+31
+Z41 !s108 1460568330.227000
+Z42 !s90 -reportprogress|300|-93|-work|work|C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/one_bit_decoder.vhd|
+Z43 !s107 C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/one_bit_decoder.vhd|
+R12
+R13
+!s100 K5hjHh9kNz`XjW<Gf<ME;3
+!i10b 1
+Abehave
+R2
+R3
+R4
+DEx4 work 15 one_bit_decoder 0 22 ?6J4V1]VWN;4zlVJAi>Ml1
+l16
+L12
+VRSYQCA=PS1[9ZR70>zzhJ2
+R8
+31
+R41
+R42
+R43
+R12
+R13
+!s100 Pmd3i2XmaD877_QnHV5L63
+!i10b 1
+Eprogcount
+Z44 w1459440801
+R2
+R3
+R4
+R5
+Z45 8C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/progcount.vhd
+Z46 FC:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/progcount.vhd
+l0
+L5
+V9[FB8dMDjO2;n<zC_2Ck]2
+R8
+31
+Z47 !s108 1460568328.402000
+Z48 !s90 -reportprogress|300|-93|-work|work|C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/progcount.vhd|
+Z49 !s107 C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/progcount.vhd|
+R12
+R13
+!s100 _6U2ig85GBe8k_M[To1U30
+!i10b 1
+Abeh
+R2
+R3
+R4
+DEx4 work 9 progcount 0 22 9[FB8dMDjO2;n<zC_2Ck]2
+l18
+L15
+Vk@AM=3eY5DKQI5kVDoHRI1
+R8
+31
+R47
+R48
+R49
+R12
+R13
+!s100 2Ei8X]TW_cD65_A^ZM4@43
+!i10b 1
+Erom
+Z50 w1460538330
+R2
+R3
+R4
+R5
+Z51 8C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/rom.vhd
+Z52 FC:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/rom.vhd
+l0
+L6
+VX^VB7Lc2MFj^SI291aL4D1
+R8
+31
+Z53 !s108 1460568329.946000
+Z54 !s90 -reportprogress|300|-93|-work|work|C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/rom.vhd|
+Z55 !s107 C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/rom.vhd|
+R12
+R13
+!s100 k^`Q0F0e5DPGH2MiS?jj]3
+!i10b 1
+Astruct
+R2
+R3
+R4
+DEx4 work 3 rom 0 22 X^VB7Lc2MFj^SI291aL4D1
+l114
+L12
+VImdRA70aKY7@I]clcZ24e1
+R8
+31
+R53
+R54
+R55
+R12
+R13
+!s100 BfY31?C7V:EWeQ06i>n063
+!i10b 1
+Eromcpu
+Z56 w1460566589
+R2
+R3
+R4
+R5
+Z57 8C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/RAM.vhd
+Z58 FC:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/RAM.vhd
+l0
+L6
+V^__9TAHz8H[H2CMO<k0?R0
+R8
+31
+Z59 !s108 1460568327.825000
+Z60 !s90 -reportprogress|300|-93|-work|work|C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/RAM.vhd|
+Z61 !s107 C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/RAM.vhd|
+R12
+R13
+!s100 TReRgmFogFE_QB^?zKz;31
+!i10b 1
+Artl
+R2
+R3
+R4
+DEx4 work 6 romcpu 0 22 ^__9TAHz8H[H2CMO<k0?R0
+l53
+L16
+V]RjkbbM?<=m_c;UIMKW<33
+R8
+31
+R59
+R60
+R61
+R12
+R13
+!s100 z8IW;E2H4jT^2Z?`lL=S10
+!i10b 1
+Eseg
+Z62 w1458320557
+R2
+R3
+R4
+R5
+Z63 8C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/seg.vhd
+Z64 FC:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/seg.vhd
+l0
+L5
+VQVTf8c4m=T@K<a4<CIX<m1
+R8
+31
+Z65 !s108 1460568329.666000
+Z66 !s90 -reportprogress|300|-93|-work|work|C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/seg.vhd|
+Z67 !s107 C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/seg.vhd|
+R12
+R13
+!s100 9z<bR>OLfY`NBcGe]DJTm0
+!i10b 1
+Abehave
+R2
+R3
+R4
+DEx4 work 3 seg 0 22 QVTf8c4m=T@K<a4<CIX<m1
+l37
+L12
+V2kkT3;87Wc2D[3cRQhW100
+R8
+31
+R65
+R66
+R67
+R12
+R13
+!s100 ^>`O?XZNMH3afQ2=F;R;A0
+!i10b 1
+Ethree_bit_decoder
+Z68 w1460539469
+R2
+R3
+R4
+R5
+Z69 8C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/three_bit_decoder.vhd
+Z70 FC:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/three_bit_decoder.vhd
+l0
+L6
+V9_XXFERDR2`X=;96`2e=:2
+R8
+31
+Z71 !s108 1460568329.276000
+Z72 !s90 -reportprogress|300|-93|-work|work|C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/three_bit_decoder.vhd|
+Z73 !s107 C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/three_bit_decoder.vhd|
+R12
+R13
+!s100 :W=Lo0=bWP76UCb`2j?Y?1
+!i10b 1
+Abehave
+R2
+R3
+R4
+DEx4 work 17 three_bit_decoder 0 22 9_XXFERDR2`X=;96`2e=:2
+l16
+L12
+VjjH[4V_II6FSX^zOj3gG@1
+R8
+31
+R71
+R72
+R73
+R12
+R13
+!s100 ]=T7OhCjVQ;m^OJDg]4E91
+!i10b 1
+Etop_model
+Z74 w1460568203
+R2
+R3
+R4
+R5
+Z75 8C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/top_model.vhd
+Z76 FC:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/top_model.vhd
+l0
+L5
+VDln;G?=k;TT52oz2hN[]?2
+R8
+31
+Z77 !s108 1460568328.979000
+Z78 !s90 -reportprogress|300|-93|-work|work|C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/top_model.vhd|
+Z79 !s107 C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/top_model.vhd|
+R12
+R13
+!s100 3R3i<j=:i8b?_HJA:Jm^E1
+!i10b 1
+Astructure
+R2
+R3
+R4
+DEx4 work 9 top_model 0 22 Dln;G?=k;TT52oz2hN[]?2
+l79
+L23
+V6^]0:8IkgRIH86DmCW[6D0
+R8
+31
+R77
+R78
+R79
+R12
+R13
+!s100 SQCh2LbIz:1hP>J1hBf2Z0
+!i10b 1
+Ezreg
+Z80 w1460535351
+R3
+R4
+R5
+Z81 8C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/Zreg.vhd
+Z82 FC:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/Zreg.vhd
+l0
+L3
+V20amS;Hi[;F=UWTeeGO>21
+R8
+31
+Z83 !s108 1460568328.698000
+Z84 !s90 -reportprogress|300|-93|-work|work|C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/Zreg.vhd|
+Z85 !s107 C:/Users/nggmlgm/Documents/Academic/College/Y3/VHDL/CU_REG/Zreg.vhd|
+R12
+R13
+!s100 [Qz]RPbTUX6dziLZ:1TzB1
+!i10b 1
+Adatareg
+R3
+R4
+DEx4 work 4 zreg 0 22 20amS;Hi[;F=UWTeeGO>21
+l16
+L13
+V?h^X[hdgdRC2e5WIP7hj31
+R8
+31
+R83
+R84
+R85
+R12
+R13
+!s100 dNg3OB<5i=iZB>9cD5VAb0
+!i10b 1
