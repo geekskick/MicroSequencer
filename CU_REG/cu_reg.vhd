@@ -66,14 +66,14 @@ architecture struct of cu_reg is
 		);
 	end component instreg;
 	
-	component zreg is
+	component z_reg is
 		port(
 			clk : in STD_LOGIC;
 			inp : in STD_LOGIC_VECTOR (7 downto 0);
 			enb : in STD_LOGIC;
 			otp : out STD_LOGIC
 			);
-	end component zreg;
+	end component z_reg;
 	
 	component buff is
 	generic(data_width: natural);
