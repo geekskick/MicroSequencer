@@ -37,7 +37,7 @@ architecture struct of top_model is
     );
     end component;
     
-    component progcount is
+    component 16_bit_data_reg_with_incr is
     port(
         input   : in STD_LOGIC_VECTOR (15 downto 0);
         clk     : in STD_LOGIC;
@@ -45,16 +45,16 @@ architecture struct of top_model is
         pcinc   : in STD_LOGIC;
         output  : out STD_LOGIC_VECTOR (15 downto 0)
         );
-    end component; 
+    end component 16_bit_data_reg_with_incr; 
     
-    component instreg is
+    component 8_bit_data_reg is
     port(
         set     : in STD_LOGIC;
         clk     : in STD_LOGIC;
         inp     : in STD_LOGIC_VECTOR (7 downto 0);
         otp     : out STD_LOGIC_VECTOR (7 downto 0)
         );
-    end component instreg;
+    end component 8_bit_data_reg;
     
     component z_reg is
     port(
@@ -115,22 +115,22 @@ begin
     cu: top_model_cu port map(sig_z, clk, ir(4 downto 0), error, ARLOAD, ARINC, R, W, MEMBUS, BUSMEM, PCINC, PCLOAD, PCBUS, DRLBUS, DRHBUS, DRLOAD, TRLOAD, TRBUS, IRLOAD, RLOAD, RBUS, ACLOAD, ACBUS, ZLOAD, sig_alu_cmd, w1, w2, alu_dum);
     
     -- program counter
-    pc: progcount port map(databus, clk, pcload, pcinc, pcbridge);
+    pc: 16_bit_data_reg_with_incr port map(databus, clk, pcload, pcinc, pcbridge);
     
     -- address reg
-    ar: progcount port map(databus, clk, arload, arinc, arbridge);
+    ar: 16_bit_data_reg_with_incr port map(databus, clk, arload, arinc, arbridge);
     
     -- data reg
-    dr: instreg port map(drlOAD, clk, databus(7 downto 0), drbridge);
+    dr: 8_bit_data_reg port map(drlOAD, clk, databus(7 downto 0), drbridge);
     
-    -- t treg
-    tr: instreg port map(trlOAD, clk, drbridge, trbridge);
+    -- t reg
+    tr: 8_bit_data_reg port map(trlOAD, clk, drbridge, trbridge);
     
     -- r reg
-    r_reg: instreg port map(rlOAD, clk,  databus(7 downto 0), rbridge); 
+    r_reg: 8_bit_data_reg port map(rlOAD, clk,  databus(7 downto 0), rbridge); 
     
     -- accumulator
-    acc:instreg port map(AClOAD, clk, alubridge, acbridge);
+    acc: 8_bit_data_reg port map(AClOAD, clk, alubridge, acbridge);
     
     -- alu
     ben_alu: alu port map(signed(acbridge), signed(databus (7 downto 0)), unsigned(sig_alu_cmd), alubridge);
@@ -139,7 +139,7 @@ begin
     john_z: z_reg port map(clk, alubridge, ZLOAD, sig_z);
     
     -- instruction register
-    ireg: instreg port map(irLOAD, clk, drbridge, ir);
+    ireg: 8_bit_data_reg port map(irLOAD, clk, drbridge, ir);
     
     -- memory
     ram: small_memory port map(arbridge(6 downto 0), sig_mem_to_bus, sig_bus_to_mem, R, W);

@@ -2,7 +2,7 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 
-entity progcount is
+entity 16_bit_data_reg_with_incr is
 	port(
 		input : in STD_LOGIC_VECTOR (15 downto 0);
 		clk 	: in STD_LOGIC;
@@ -10,9 +10,9 @@ entity progcount is
 		pcinc : in STD_LOGIC;
 		output: out STD_LOGIC_VECTOR (15 downto 0)
 		);
-end entity progcount;
+end entity 16_bit_data_reg_with_incr;
 
-architecture beh of progcount is
+architecture beh of 16_bit_data_reg_with_incr is
 	signal current_pc: std_logic_vector(15 downto 0) := (others => '0');
 
 begin

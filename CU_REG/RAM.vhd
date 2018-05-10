@@ -14,7 +14,7 @@ end small_memory;
 
 architecture rtl of small_memory is
 
-    --64 bytes of program code and 64 of ram
+    -- 64 bytes of program code and 64 of ram
     subtype my_word is std_logic_vector(7 downto 0); 
     type mem is array (0 to 63) of my_word; 
     
