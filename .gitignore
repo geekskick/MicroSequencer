@@ -6,3 +6,4 @@ simulation/
 *.rpt
 db/
 *.q*
+incremental_db/
