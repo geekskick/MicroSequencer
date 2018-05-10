@@ -2,7 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity rom_cpu is
+entity small_memory is
   port( 
     adr : in  std_logic_vector(6 downto 0); -- address to use
     o0  : out std_logic_vector(7 downto 0); -- output data
@@ -10,9 +10,9 @@ entity rom_cpu is
     r, w: in std_logic := '0'               -- read or write
   );
 
-end rom_cpu;
+end small_memory;
 
-architecture rtl of rom_cpu is
+architecture rtl of small_memory is
 
     --64 bytes of program code and 64 of ram
     subtype my_word is std_logic_vector(7 downto 0); 
