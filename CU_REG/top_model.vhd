@@ -1,141 +1,157 @@
 library IEEE;
 use IEEE.std_logic_1164.all;
-use ieee.numeric_std.all;
+use IEEE.numeric_std.all;
 
 entity top_model is
+port(
+    clk: in std_logic
+);
+end entity top_model;
+
+architecture struct of top_model is
+
+    component ALU is
+     port( -- Signed means these can be -ve or +ve, unsigned can only be +ve.
+        --Enable  : in std_logic;     --clock signal
+        AC, SigBus : in signed(7 downto 0); --input operands
+        Logic   : in unsigned(3 downto 0); --Operation to be performed
+        p_ALUOutput : out std_LOGIC_VECTOR(7 downto 0) --output of ALU
+     );
+    end component ALU;
+
+    component top_model_cu is
     port( 
         -- INPUTS
         z, clk    : in std_logic;
-        IR        : in std_logic_vector(4 downto 0);    -- INSTRUCTION REGISTER LOW NIBBLE + 1
+        IR          : in std_logic_vector(4 downto 0); -- INSTRUCTION REGISTER LOW NIBBLE + 1
        
         -- COMMAND SIGNALS
         error, ARLOAD, ARINC, R, W, MEMBUS, BUSMEM, PCINC, PCLOAD, PCBUS, DRLBUS, DRHBUS, DRLOAD, TRLOAD, TRBUS, IRLOAD, RLOAD, RBUS, ACLOAD, ACBUS, ZLOAD    : out std_logic;
 
-        alu_cmd : out std_logic_vector(3 downto 0);     -- TO THE ALU INPUT
+        alu_cmd : out std_logic_vector(3 downto 0); -- TO THE ALU INPUT
        
         --segment displayers
-        curr_add_H: out std_logic_vector(6 downto 0);   -- HIGH NIBBLE OF CURRENT MICROCODE ADDRESS
-        curr_add_L: out std_logic_vector(6 downto 0);   -- LOW NIBBLE OF CURRENT MICROCODE ADDRESS
-        curr_alu_S: out std_logic_vector(6 downto 0)    -- ALUSELECT DISPLAY
+        curr_add_H: out std_logic_vector(6 downto 0); -- HIGH NIBBLE OF CURRENT MICROCODE ADDRESS
+        curr_add_L: out std_logic_vector(6 downto 0); -- LOW NIBBLE OF CURRENT MICROCODE ADDRESS
+        curr_alu_S: out std_logic_vector(6 downto 0)  -- ALUSELECT DISPLAY
     );
-end entity;
-
-architecture structure of top_model is
-
-    -- MICRO OPERATIONS FIELDS
-    signal m3           : std_logic;
-    signal m1           : std_logic_vector(2 downto 0);
-    signal m2           : std_logic_vector(2 downto 0);
-
-    -- COMMAND TO SEND TO THE ALU
-    SIGNAL ALUSELECT    : std_logic_vector(3 downto 0);
-     
-    -- CURRENT ADDRESS OF THE MICROCODE
-    signal curr_add     : std_logic_vector(5 downto 0);
-     
-    -- HIGH NIBBLE OF THE MICROCODE ADDRESS
-    signal haddr        : std_logic_vector(3 downto 0);
-
-    -- MICROOPERATIONS
-    signal nop1, nop2, nop3, arin, ardt, arpc, acin, aczo, acr, acdr, minu, plus, aand, oor, xxor, nnot, trdr, pcin, pcdt, irdr, rac, mdr, drac, zalu, drm, lshift, rshift  : std_logic := '0';
+    end component;
     
-     
-    -- COMPONENT DECLARATIONS FOLLOW
-    component microsequencer is
+    component progcount is
     port(
-        clk, z             : in std_logic;
-        instruction        : in std_logic_vector(4 downto 0);
-        current_addr_out   : out std_logic_vector(5 downto 0);
-        m1                 : out std_logic_vector(2 downto 0);
-        m2                 : out std_logic_vector(2 downto 0);
-        m3                 : out std_logic;
-        aluselect          : out std_logic_vector(3 downto 0)
+        input   : in STD_LOGIC_VECTOR (15 downto 0);
+        clk     : in STD_LOGIC;
+        pcld    : in  STD_LOGIC;
+        pcinc   : in STD_LOGIC;
+        output  : out STD_LOGIC_VECTOR (15 downto 0)
+        );
+    end component; 
+    
+    component instreg is
+    port(
+        set     : in STD_LOGIC;
+        clk     : in STD_LOGIC;
+        inp     : in STD_LOGIC_VECTOR (7 downto 0);
+        otp     : out STD_LOGIC_VECTOR (7 downto 0)
+        );
+    end component instreg;
+    
+    component z_reg is
+    port(
+        clk     : in STD_LOGIC;
+        inp     : in STD_LOGIC_VECTOR (7 downto 0);
+        enb     : in STD_LOGIC;
+        otp     : out STD_LOGIC
+        );
+    end component z_reg;
+    
+    component buff is
+    generic(data_width: natural);
+    port(
+        IBus    : in std_logic_vector(data_width-1 downto 0);
+        OBus    : out std_logic_vector(data_width-1 downto 0);
+        e       : in std_logic
     );
-    end component microsequencer;
-   
+    end component buff;
+    
+    component small_memory is
+    port( 
+        adr     : in  std_logic_vector(6 downto 0); -- address to use
+        o0      : out std_logic_vector(7 downto 0); -- output data
+        i0      : in std_logic_vector(7 downto 0);  -- input data
+        r, w    : in std_logic := '0'               -- read or write
+    );
+    end component small_memory;
 
-    component three_bit_decoder is
-    port(
-        input   : in std_logic_vector(2 downto 0);
-        O0, O1, O2, O3, O4, O5, O6, O7 : out std_logic
-    );
-    end component three_bit_decoder;
+    signal databus: std_logic_vector(15 downto 0);
     
-    component one_bit_decoder is
-    port(input  : in std_logic;
-         O0, O1 : out std_logic
-         );
-    end component one_bit_decoder;
-     
-     -- 7 SEGMENT DISPLAY LOGIC
-    component seg is
-    port(
-        Inumber : in std_logic_vector(3 downto 0);
-        ODisp   : out std_logic_vector(6 downto 0)
-    );
-    end component seg;
+    -- dummy not used
+    signal alu_dum, w1 ,w2 :std_LOGIC_VECTOR(6 downto 0);
     
+    -- from the intrustion reg to the cu
+    signal ir :std_LOGIC_VECTOR(7 downto 0);
     
+    signal sig_mem_to_bus :std_LOGIC_VECTOR(7 downto 0);
+    signal sig_bus_to_mem :std_LOGIC_VECTOR(7 downto 0);
+    
+    -- from the cu to the alu
+    signal sig_alu_cmd  : std_logic_vector(3 downto 0);
+    
+    -- command signal sfrom cu to other places
+    signal error, ARLOAD, ARINC, R, W, MEMBUS, BUSMEM, PCINC, PCLOAD, PCBUS, DRLBUS, DRHBUS, DRLOAD, TRLOAD, TRBUS, IRLOAD, RLOAD, RBUS, ACLOAD, ACBUS, ZLOAD   : std_logic;
+    
+    --z to the cu
+    signal sig_z: std_logic;
+    
+    -- outputs form the pc and ar
+    signal pcbridge, arbridge: STD_LOGIC_VECTOR(15 downto 0);
+    
+    --outputs from the dr, tr, ac and alu and r
+    signal drbridge, trbridge, acbridge, alubridge, rbridge: std_LOGIC_VECTOR(7 downto 0);
+
 begin
 
-    -- DEBUGGING COMMANDS
-    haddr <= "00" & curr_add(5 downto 4) ;          -- THE HIGH NIBBLE OF THE CURRENT ADDRESS NEEDS TO BE MAPPED TO GO FROM 2 BITS TO 4
-
-    HDigit  : seg port map( haddr, 
-                            curr_add_H);            -- THE HIGH NIBBLE DISPLAY
-    LDigit  : seg port map( curr_add(3 downto 0), 
-                            curr_add_L);            -- THE LOW NIBBLE DISPLAY
-    ALUSEL  : seg port map( ALUSELECT,  
-                            curr_alu_S);            -- THE ALU SELECT VALUE DISPLAY
-
-    --  M1           M2        M3      ALU 
--- NOP   000    NOP   000   NOP 0   NOP     0000
--- ARIN  001     PCIN  001   DRM 1  PLUS    0001                    
--- ARDT  010    PCDT  010
--- ARPC  011    IRDR  011           MINU    0010
--- TRDR  100    RAC  100
--- ERROR 101    MDR   101           ACIN    0011
--- ACR   110    DRAC  110           ACZO    0100
--- ACDR  111    ZALU  111           AND     0101
---                                  OR      0110
---                                  NOT     0111
---                                  XOR     1000
---                                  THRU    1001
---                                  THRU    1010
---                                  LSHIFT  1011
---                                  RSHIFT  1100  
-
-    -- DECODER INSTANTIATION, WHERE EACH MICROCODE FIELD (M1, M2, M3) GETS IT'S OWN DECODER
-    m1_ops   : three_bit_decoder port map(m1, nop1, arin, ardt, arpc, trdr, error, acr, acdr);
-    m2_ops   : three_bit_decoder port map(m2, nop2, pcin, pcdt, irdr, rac, mdr, drac, zalu);
-    m3_ops   : one_bit_decoder port map(m3, nop3, drm);
+    -- control unit
+    cu: top_model_cu port map(sig_z, clk, ir(4 downto 0), error, ARLOAD, ARINC, R, W, MEMBUS, BUSMEM, PCINC, PCLOAD, PCBUS, DRLBUS, DRHBUS, DRLOAD, TRLOAD, TRBUS, IRLOAD, RLOAD, RBUS, ACLOAD, ACBUS, ZLOAD, sig_alu_cmd, w1, w2, alu_dum);
     
-     -- INSTANTIATE THE MICROSEQUENCER
-    mseq    : microsequencer port map(clk, z, IR, curr_add, m1, m2, m3, ALUSELECT);
+    -- program counter
+    pc: progcount port map(databus, clk, pcload, pcinc, pcbridge);
     
-     -- COMMAND SIGNALS AND WHEN THEY ARE ACTIVE
-     ARLOAD <= arpc     or ardt;
-     ARINC  <= arin;
-     R      <= drm;
-     W      <= mdr;
-     MEMBUS <= drm;
-     BUSMEM <= mdr;
-     PCINC  <= pcin;
-     PCLOAD <= pcdt;
-     PCBUS  <= arpc;
-     DRLBUS <= acdr     or mdr;
-     DRHBUS <= pcdt     or ardt;
-     DRLOAD <= drm      or drac;
-     TRLOAD <= trdr;
-     TRBUS  <= ardt     or pcdt;
-     IRLOAD <= irdr;
-     RLOAD  <= rac;
-     RBUS   <= '1' when(ALUSELECT = "0001" or ALUSELECT = "0010" or ALUSELECT = "0101" or ALUSELECT = "0110" or ALUSELECT = "1000" or acr = '1') else '0';
-     ACLOAD <= '1' when (to_integer(unsigned(ALUSELECT)) > 0) else '0';
-     ACBUS  <= drac     or rac;
-     ZLOAD  <= zalu;
-
-     alu_cmd <= ALUSELECT;
-     
+    -- address reg
+    ar: progcount port map(databus, clk, arload, arinc, arbridge);
     
-end architecture;
+    -- data reg
+    dr: instreg port map(drlOAD, clk, databus(7 downto 0), drbridge);
+    
+    -- t treg
+    tr: instreg port map(trlOAD, clk, drbridge, trbridge);
+    
+    -- r reg
+    r_reg: instreg port map(rlOAD, clk,  databus(7 downto 0), rbridge); 
+    
+    -- accumulator
+    acc:instreg port map(AClOAD, clk, alubridge, acbridge);
+    
+    -- alu
+    ben_alu: alu port map(signed(acbridge), signed(databus (7 downto 0)), unsigned(sig_alu_cmd), alubridge);
+    
+    -- register
+    john_z: z_reg port map(clk, alubridge, ZLOAD, sig_z);
+    
+    -- instruction register
+    ireg: instreg port map(irLOAD, clk, drbridge, ir);
+    
+    -- memory
+    ram: small_memory port map(arbridge(6 downto 0), sig_mem_to_bus, sig_bus_to_mem, R, W);
+    
+    -- Tri states                width               in                      out                     enable
+    membusbuf   : buff generic map(8)   port map(sig_mem_to_bus,        databus(7 downto 0),        MEMBUS);
+    busmembuf   : buff generic map(8)   port map(databus(7 downto 0),   sig_bus_to_mem,             BUSMEM);
+    acbuff      : buff generic map(8)   port map(acbridge,              databus(7 downto 0),        ACBUS);
+    rbuff       : buff generic map(8)   port map(rbridge,               databus(7 downto 0),        RBUS);
+    pcbuf       : buff generic map(16)  port map(pcbridge,              databus,                    pcBUS);
+    drhbuf      : buff generic map(8)   port map(drbridge,              databus(15 downto 8),       DRHBUS);
+    drlbuf      : buff generic map(8)   port map(drbridge,              databus(7 downto 0),        DRLBUS);
+    trbuf       : buff generic map(8)   port map(trbridge,              databus(7 downto 0),        TRBUS);
+    
+end architecture struct;
