@@ -11,18 +11,17 @@ end entity top_model;
 architecture struct of top_model is
 
     component ALU is
-     port( -- Signed means these can be -ve or +ve, unsigned can only be +ve.
-        --Enable  : in std_logic;     --clock signal
-        AC, SigBus : in signed(7 downto 0); --input operands
-        Logic   : in unsigned(3 downto 0); --Operation to be performed
-        p_ALUOutput : out std_LOGIC_VECTOR(7 downto 0) --output of ALU
+     port(
+        AC, SigBus  : in signed(7 downto 0); 
+        Logic       : in unsigned(3 downto 0); 
+        Output      : out std_LOGIC_VECTOR(7 downto 0)
      );
     end component ALU;
 
     component top_model_cu is
     port( 
         -- INPUTS
-        z, clk    : in std_logic;
+        z, clk      : in std_logic;
         IR          : in std_logic_vector(4 downto 0); -- INSTRUCTION REGISTER LOW NIBBLE + 1
        
         -- COMMAND SIGNALS
@@ -127,16 +126,16 @@ begin
     tr: 8_bit_data_reg port map(trlOAD, clk, drbridge, trbridge);
     
     -- r reg
-    r_reg: 8_bit_data_reg port map(rlOAD, clk,  databus(7 downto 0), rbridge); 
+    r:  8_bit_data_reg port map(rlOAD, clk,  databus(7 downto 0), rbridge); 
     
     -- accumulator
     acc: 8_bit_data_reg port map(AClOAD, clk, alubridge, acbridge);
     
     -- alu
-    ben_alu: alu port map(signed(acbridge), signed(databus (7 downto 0)), unsigned(sig_alu_cmd), alubridge);
+    alu: alu port map(signed(acbridge), signed(databus (7 downto 0)), unsigned(sig_alu_cmd), alubridge);
     
     -- register
-    john_z: z_reg port map(clk, alubridge, ZLOAD, sig_z);
+    z: z_reg port map(clk, alubridge, ZLOAD, sig_z);
     
     -- instruction register
     ireg: 8_bit_data_reg port map(irLOAD, clk, drbridge, ir);

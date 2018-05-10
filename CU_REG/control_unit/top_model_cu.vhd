@@ -90,10 +90,10 @@ begin
 
     --  M1           M2        M3      ALU 
 -- NOP   000    NOP   000   NOP 0   NOP     0000
--- ARIN  001     PCIN  001   DRM 1  PLUS    0001                    
+-- ARIN  001    PCIN  001   DRM 1   PLUS    0001                    
 -- ARDT  010    PCDT  010
 -- ARPC  011    IRDR  011           MINU    0010
--- TRDR  100    RAC  100
+-- TRDR  100    RAC   100
 -- ERROR 101    MDR   101           ACIN    0011
 -- ACR   110    DRAC  110           ACZO    0100
 -- ACDR  111    ZALU  111           AND     0101
