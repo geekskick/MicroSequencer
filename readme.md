@@ -8,7 +8,7 @@ From memory it also used the RAM chip on the board but it looks like I didn't in
 This code has since been 'pruned' where I attempted to remove unused files and change the names etc so there may be build errors present. 
 
 ## What it does
-See the [microcode](control_unit/microcode.vhd).
+See the [microcode](CU_REG/control_unit/microcode.vhd).
 
 ## Future Work
 There are no plans to update this or even make sure it still builds. But I might do it? We'll see!
