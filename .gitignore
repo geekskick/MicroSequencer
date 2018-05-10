@@ -3,3 +3,5 @@
 *.veo
 output_files/
 simulation/
+*.rpt
+db/
