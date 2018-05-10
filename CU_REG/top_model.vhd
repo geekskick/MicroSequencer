@@ -62,16 +62,16 @@ architecture structure of top_model is
     end component three_bit_decoder;
     
     component one_bit_decoder is
-    port(input: in std_logic;
-         O0, O1: out std_logic
+    port(input  : in std_logic;
+         O0, O1 : out std_logic
          );
     end component one_bit_decoder;
      
      -- 7 SEGMENT DISPLAY LOGIC
     component seg is
     port(
-        Inumber: in std_logic_vector(3 downto 0);
-        ODisp: out std_logic_vector(6 downto 0)
+        Inumber : in std_logic_vector(3 downto 0);
+        ODisp   : out std_logic_vector(6 downto 0)
     );
     end component seg;
     
@@ -79,11 +79,14 @@ architecture structure of top_model is
 begin
 
     -- DEBUGGING COMMANDS
-    haddr <= "00" & curr_add(5 downto 4) ;                              -- THE HIGH NIBBLE OF THE CURRENT ADDRESS NEEDS TO BE MAPPED TO GO GROM 2 BITS TO 4
+    haddr <= "00" & curr_add(5 downto 4) ;          -- THE HIGH NIBBLE OF THE CURRENT ADDRESS NEEDS TO BE MAPPED TO GO FROM 2 BITS TO 4
 
-    HDigit  : seg port map(haddr, curr_add_H);                          -- THE HIGH NIBBLE DISPLAY
-    LDigit  : seg port map(curr_add(3 downto 0), curr_add_L);           -- THE LOW NIBBLE DISPLAY
-    ALUSEL  : seg port map(ALUSELECT, CURr_aLU_S);                      -- THE ALU SELECT VALUE DISPLAY
+    HDigit  : seg port map( haddr, 
+                            curr_add_H);            -- THE HIGH NIBBLE DISPLAY
+    LDigit  : seg port map( curr_add(3 downto 0), 
+                            curr_add_L);            -- THE LOW NIBBLE DISPLAY
+    ALUSEL  : seg port map( ALUSELECT,  
+                            curr_alu_S);            -- THE ALU SELECT VALUE DISPLAY
 
     --  M1           M2        M3      ALU 
 -- NOP   000    NOP   000   NOP 0   NOP     0000
