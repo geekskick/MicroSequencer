@@ -56,7 +56,7 @@ begin
         plus_one when "00",
         next_addr when "10",
         map_out when "11",
-			return_add when "01",
+		return_add when "01",
         (others => '1') when others;
 
     -- LATCH THE NEXT ADDRESS INTO THE SUBROUTINE RETURN REGISTER
@@ -106,7 +106,7 @@ begin
     -- WHEN THE CLOCK TICKS LATCH THE MUX OUTPUT TO THE CURRENT ADDRESS
     process(clk)
     begin
-        if falling_edge(clk) then
+        if rising_edge(clk) then
             current_addr <= mux_addr;
         end if;
     end process;

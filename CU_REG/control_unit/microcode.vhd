@@ -43,7 +43,7 @@ architecture struct of rom is
 
 type mem is array (0 to 63) of std_logic_vector(20 downto 0); 
 constant microcode : mem := ( 
---location => bt & condition & M1 & M2 & M3 & next address
+--loc => bt & condition & M1 & M2 & M3 & alu & next address
 0 => "00" & "11" & "000" & "000" & "0" & "0000" & "000001",     -- NOP
 1 => "00" & "11" & "011" & "000" & "0" & "0000" & "000111",     -- FETCH1
 2 => "01" & "11" & "000" & "000" & "0" & "0000" & "010011",     -- LDAC0
