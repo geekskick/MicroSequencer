@@ -26,7 +26,7 @@ begin
                 otp <= buf;
         end if;     
         if enb = '0' then
-            otp <= "Z";
+            otp <= 'Z';
         end if;
     end process;
 end beh;

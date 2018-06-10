@@ -36,7 +36,7 @@ architecture struct of top_model is
     );
     end component;
     
-    component 16_bit_data_reg_with_incr is
+    component sixteen_bit_data_reg_with_incr is
     port(
         input   : in STD_LOGIC_VECTOR (15 downto 0);
         clk     : in STD_LOGIC;
@@ -44,16 +44,16 @@ architecture struct of top_model is
         pcinc   : in STD_LOGIC;
         output  : out STD_LOGIC_VECTOR (15 downto 0)
         );
-    end component 16_bit_data_reg_with_incr; 
+    end component sixteen_bit_data_reg_with_incr; 
     
-    component 8_bit_data_reg is
+    component eight_bit_data_reg is
     port(
         set     : in STD_LOGIC;
         clk     : in STD_LOGIC;
         inp     : in STD_LOGIC_VECTOR (7 downto 0);
         otp     : out STD_LOGIC_VECTOR (7 downto 0)
         );
-    end component 8_bit_data_reg;
+    end component eight_bit_data_reg;
     
     component z_reg is
     port(
@@ -109,48 +109,47 @@ architecture struct of top_model is
     signal drbridge, trbridge, acbridge, alubridge, rbridge: std_LOGIC_VECTOR(7 downto 0);
 
 begin
-
     -- control unit
-    cu: top_model_cu port map(sig_z, clk, ir(4 downto 0), error, ARLOAD, ARINC, R, W, MEMBUS, BUSMEM, PCINC, PCLOAD, PCBUS, DRLBUS, DRHBUS, DRLOAD, TRLOAD, TRBUS, IRLOAD, RLOAD, RBUS, ACLOAD, ACBUS, ZLOAD, sig_alu_cmd, w1, w2, alu_dum);
+    cu_inst: top_model_cu port map(sig_z, clk, ir(4 downto 0), error, ARLOAD, ARINC, R, W, MEMBUS, BUSMEM, PCINC, PCLOAD, PCBUS, DRLBUS, DRHBUS, DRLOAD, TRLOAD, TRBUS, IRLOAD, RLOAD, RBUS, ACLOAD, ACBUS, ZLOAD, sig_alu_cmd, w1, w2, alu_dum);
     
     -- program counter
-    pc: 16_bit_data_reg_with_incr port map(databus, clk, pcload, pcinc, pcbridge);
+    pc_inst: sixteen_bit_data_reg_with_incr port map(databus, clk, pcload, pcinc, pcbridge);
     
     -- address reg
-    ar: 16_bit_data_reg_with_incr port map(databus, clk, arload, arinc, arbridge);
+    ar_inst: sixteen_bit_data_reg_with_incr port map(databus, clk, arload, arinc, arbridge);
     
     -- data reg
-    dr: 8_bit_data_reg port map(drlOAD, clk, databus(7 downto 0), drbridge);
+    dr_inst: eight_bit_data_reg port map(drlOAD, clk, databus(7 downto 0), drbridge);
     
     -- t reg
-    tr: 8_bit_data_reg port map(trlOAD, clk, drbridge, trbridge);
+    tr_inst: eight_bit_data_reg port map(trlOAD, clk, drbridge, trbridge);
     
     -- r reg
-    r:  8_bit_data_reg port map(rlOAD, clk,  databus(7 downto 0), rbridge); 
+    r_inst:  eight_bit_data_reg port map(rlOAD, clk,  databus(7 downto 0), rbridge); 
     
     -- accumulator
-    acc: 8_bit_data_reg port map(AClOAD, clk, alubridge, acbridge);
+    acc_inst: eight_bit_data_reg port map(AClOAD, clk, alubridge, acbridge);
     
     -- alu
-    alu: alu port map(signed(acbridge), signed(databus (7 downto 0)), unsigned(sig_alu_cmd), alubridge);
+    alu_inst: alu port map(signed(acbridge), signed(databus (7 downto 0)), unsigned(sig_alu_cmd), alubridge);
     
     -- register
-    z: z_reg port map(clk, alubridge, ZLOAD, sig_z);
+    z_inst: z_reg port map(clk, alubridge, ZLOAD, sig_z);
     
     -- instruction register
-    ireg: 8_bit_data_reg port map(irLOAD, clk, drbridge, ir);
+    i_inst: eight_bit_data_reg port map(irLOAD, clk, drbridge, ir);
     
     -- memory
-    ram: small_memory port map(arbridge(6 downto 0), sig_mem_to_bus, sig_bus_to_mem, R, W);
+    ram_inst: small_memory port map(arbridge(6 downto 0), sig_mem_to_bus, sig_bus_to_mem, R, W);
     
     -- Tri states                width               in                      out                     enable
-    membusbuf   : buff generic map(8)   port map(sig_mem_to_bus,        databus(7 downto 0),        MEMBUS);
-    busmembuf   : buff generic map(8)   port map(databus(7 downto 0),   sig_bus_to_mem,             BUSMEM);
-    acbuff      : buff generic map(8)   port map(acbridge,              databus(7 downto 0),        ACBUS);
-    rbuff       : buff generic map(8)   port map(rbridge,               databus(7 downto 0),        RBUS);
-    pcbuf       : buff generic map(16)  port map(pcbridge,              databus,                    pcBUS);
-    drhbuf      : buff generic map(8)   port map(drbridge,              databus(15 downto 8),       DRHBUS);
-    drlbuf      : buff generic map(8)   port map(drbridge,              databus(7 downto 0),        DRLBUS);
-    trbuf       : buff generic map(8)   port map(trbridge,              databus(7 downto 0),        TRBUS);
+    membusbuf_inst   : buff generic map(8)   port map(sig_mem_to_bus,        databus(7 downto 0),        MEMBUS);
+    busmembuf_inst   : buff generic map(8)   port map(databus(7 downto 0),   sig_bus_to_mem,             BUSMEM);
+    acbuff_inst      : buff generic map(8)   port map(acbridge,              databus(7 downto 0),        ACBUS);
+    rbuff_inst       : buff generic map(8)   port map(rbridge,               databus(7 downto 0),        RBUS);
+    pcbuf_inst       : buff generic map(16)  port map(pcbridge,              databus,                    pcBUS);
+    drhbuf_inst      : buff generic map(8)   port map(drbridge,              databus(15 downto 8),       DRHBUS);
+    drlbuf_inst      : buff generic map(8)   port map(drbridge,              databus(7 downto 0),        DRLBUS);
+    trbuf_inst       : buff generic map(8)   port map(trbridge,              databus(7 downto 0),        TRBUS);
     
 end architecture struct;
