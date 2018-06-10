@@ -82,16 +82,15 @@ stim:
         mem_o <= ldac;
         assert to_integer(unsigned(pc)) = 0 report "PC didn't init: " & to_hstring(pc);
 
-        wait for 1* period;
-        mem_o <= X"08";
         wait for 2* period;
+        mem_o <= X"08";
+        wait for 1* period;
         
         assert ir = ldac report "IR isn't 01: 0x" & to_hstring(ir);
         assert to_integer(unsigned(pc)) = 1 report "PC didn't INC: " & to_hstring(pc);
         
-        wait for 4* period;
+        wait for 5* period;
         assert ac = X"08" report "AC isn't 0x08, LDAC failure: 0x" & to_hstring(ac);
-        
         
         stop <= true;
         wait;
