@@ -11,11 +11,11 @@ entity eight_bit_data_reg is
 end eight_bit_data_reg;
 
 architecture beh of eight_bit_data_reg is
-signal buf: STD_LOGIC_VECTOR (7 downto 0);
+signal buf: STD_LOGIC_VECTOR (7 downto 0) := (others => '0');
 begin
     process(set, clk)
         begin
-            if set = '1' and  rising_edge(clk) then
+            if set = '1' and rising_edge(clk) then
                 buf <= inp;
             end if;
     end process;
