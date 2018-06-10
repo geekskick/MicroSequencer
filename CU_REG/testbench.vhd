@@ -13,8 +13,7 @@ architecture Behavioral of testbench is
         tb_z: out std_logic;
         tb_ir: out std_logic_vector(7 downto 0);
         tb_ac: out std_logic_vector(7 downto 0);
-        tb_drl: out std_logic_vector(7 downto 0);
-        tb_drh: out std_logic_vector(7 downto 0);
+        tb_dr: out std_logic_vector(7 downto 0);
         tb_tr: out std_logic_vector(7 downto 0);
         tb_ar: out std_logic_vector(7 downto 0);
         tb_pc: out std_logic_vector(15 downto 0);
@@ -28,14 +27,15 @@ architecture Behavioral of testbench is
         mem_in  : out std_logic_vector(7 downto 0)    
     );
     end component;
-    
+    constant ldac : std_logic_vector(7 downto 0) := X"01";
+    constant period : time := 200ns;
     signal clk  : std_logic;
+    signal stop : boolean := false;
     signal z    : std_logic;
     signal ir   : std_logic_vector(7 downto 0);
     signal ar   : std_logic_vector(7 downto 0);
     signal ac   : std_logic_vector(7 downto 0);
-    signal drl  : std_logic_vector(7 downto 0);
-    signal drh  : std_logic_vector(7 downto 0);
+    signal dr   : std_logic_vector(7 downto 0);
     signal tr   : std_logic_vector(7 downto 0);
     signal pc   : std_logic_vector(15 downto 0);
     signal db   : std_logic_vector(15 downto 0);
@@ -51,8 +51,7 @@ uut: top_model port map(
         tb_z    => z,
         tb_ir   => ir,
         tb_ac   => ac,
-        tb_drl  => drl,
-        tb_drh  => drh,
+        tb_dr  => dr,
         tb_tr   => tr,
         tb_ar   => ar,
         tb_pc   => pc, 
@@ -68,14 +67,34 @@ uut: top_model port map(
 clk_tick: 
     process
     begin
-        loop
+        while stop = false loop
             clk <= '1';
-            wait for 100ns;
+            wait for period/2;
             clk <= '0';
-            wait for 100ns;
+            wait for period/2;
         end loop;
+        wait;
     end process;
     
+stim:
+    process
+    begin
+        mem_o <= ldac;
+        assert to_integer(unsigned(pc)) = 0 report "PC didn't init: " & to_hstring(pc);
 
+        wait for 1* period;
+        mem_o <= X"08";
+        wait for 2* period;
+        
+        assert ir = ldac report "IR isn't 01: 0x" & to_hstring(ir);
+        assert to_integer(unsigned(pc)) = 1 report "PC didn't INC: " & to_hstring(pc);
+        
+        wait for 4* period;
+        assert ac = X"08" report "AC isn't 0x08, LDAC failure: 0x" & to_hstring(ac);
+        
+        
+        stop <= true;
+        wait;
+    end process;
 
 end Behavioral;
