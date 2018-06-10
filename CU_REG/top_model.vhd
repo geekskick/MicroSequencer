@@ -4,7 +4,24 @@ use IEEE.numeric_std.all;
 
 entity top_model is
 port(
-    clk: in std_logic
+    clk: in std_logic;
+    tb_z: out std_logic;
+    tb_ir: out std_logic_vector(7 downto 0);
+    tb_ac: out std_logic_vector(7 downto 0);
+    tb_drl: out std_logic_vector(7 downto 0);
+    tb_drh: out std_logic_vector(7 downto 0);
+    tb_tr: out std_logic_vector(7 downto 0);
+    tb_ar: out std_logic_vector(7 downto 0);
+    tb_pc: out std_logic_vector(15 downto 0);
+    tb_db: out std_logic_vector(15 downto 0);
+    
+    -- mmory interface
+    mem_wr: out std_logic;
+    mem_rd: out std_logic;
+    mem_adr : out std_logic_vector(6 downto 0); 
+    mem_out : in std_logic_vector(7 downto 0); 
+    mem_in  : out std_logic_vector(7 downto 0)
+    
 );
 end entity top_model;
 
@@ -107,8 +124,36 @@ architecture struct of top_model is
     
     --outputs from the dr, tr, ac and alu and r
     signal drbridge, trbridge, acbridge, alubridge, rbridge: std_LOGIC_VECTOR(7 downto 0);
+    
+    signal drl_buff_db, drh_buff_db, tr_buff_db, ac_buff_db, r_buff_db, mem_buff_db: std_logic_vector(7 downto 0);
+    signal pc_buff_db : std_logic_vector(15 downto 0);
 
 begin
+    -- test bench signals
+    tb_z    <= sig_z;
+    tb_ir   <= ir;
+    tb_pc   <= pc_buff_db;
+    tb_drl  <= drl_buff_db;
+    tb_drh  <= drh_buff_db;
+    tb_db   <= databus;
+    tb_ac   <= ac_buff_db;
+    tb_tr   <= tr_buff_db;
+    
+    -- connect the memory to the outside world
+    mem_wr  <= W;
+    mem_rd  <= R;
+    mem_adr <= arbridge(6 downto 0);
+    sig_mem_to_bus <= mem_out;
+    mem_in  <= sig_bus_to_mem;
+       
+    databus(7 downto 0) <= drl_buff_db;
+    databus(15 downto 8)<= drh_buff_db;
+    databus(7 downto 0) <= tr_buff_db;
+    databus(7 downto 0) <= r_buff_db;
+    databus(7 downto 0) <= ac_buff_db;
+    databus(7 downto 0) <= mem_buff_db;
+    databus             <= pc_buff_db;
+    
     -- control unit
     cu_inst: top_model_cu port map(sig_z, clk, ir(4 downto 0), error, ARLOAD, ARINC, R, W, MEMBUS, BUSMEM, PCINC, PCLOAD, PCBUS, DRLBUS, DRHBUS, DRLOAD, TRLOAD, TRBUS, IRLOAD, RLOAD, RBUS, ACLOAD, ACBUS, ZLOAD, sig_alu_cmd, w1, w2, alu_dum);
     
@@ -140,16 +185,16 @@ begin
     i_inst: eight_bit_data_reg port map(irLOAD, clk, drbridge, ir);
     
     -- memory
-    ram_inst: small_memory port map(arbridge(6 downto 0), sig_mem_to_bus, sig_bus_to_mem, R, W);
+    --ram_inst: small_memory port map(arbridge(6 downto 0), sig_mem_to_bus, sig_bus_to_mem, R, W);
     
-    -- Tri states                width               in                      out                     enable
-    membusbuf_inst   : buff generic map(8)   port map(sig_mem_to_bus,        databus(7 downto 0),        MEMBUS);
+    -- Tri states                width               in                      out                         enable
+    membusbuf_inst   : buff generic map(8)   port map(sig_mem_to_bus,        mem_buff_db,                MEMBUS);
     busmembuf_inst   : buff generic map(8)   port map(databus(7 downto 0),   sig_bus_to_mem,             BUSMEM);
-    acbuff_inst      : buff generic map(8)   port map(acbridge,              databus(7 downto 0),        ACBUS);
-    rbuff_inst       : buff generic map(8)   port map(rbridge,               databus(7 downto 0),        RBUS);
-    pcbuf_inst       : buff generic map(16)  port map(pcbridge,              databus,                    pcBUS);
-    drhbuf_inst      : buff generic map(8)   port map(drbridge,              databus(15 downto 8),       DRHBUS);
-    drlbuf_inst      : buff generic map(8)   port map(drbridge,              databus(7 downto 0),        DRLBUS);
-    trbuf_inst       : buff generic map(8)   port map(trbridge,              databus(7 downto 0),        TRBUS);
+    acbuff_inst      : buff generic map(8)   port map(acbridge,              ac_buff_db,                 ACBUS);
+    rbuff_inst       : buff generic map(8)   port map(rbridge,               r_buff_db,                  RBUS);
+    pcbuf_inst       : buff generic map(16)  port map(pcbridge,              pc_buff_db,                 PCBUS);
+    drhbuf_inst      : buff generic map(8)   port map(drbridge,              drh_buff_db,                DRHBUS);
+    drlbuf_inst      : buff generic map(8)   port map(drbridge,              drl_buff_db,                DRLBUS);
+    trbuf_inst       : buff generic map(8)   port map(trbridge,              tr_buff_db,                 TRBUS);
     
 end architecture struct;
