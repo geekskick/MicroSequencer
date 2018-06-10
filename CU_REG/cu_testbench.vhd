@@ -191,12 +191,374 @@ stim:
         assert W = '1' report "W";
         
         --FETCH1
-        ir <= "00011";
+        ir <= "00011"; --MVAC
+        wait for period;
+        report "FETCH1";
+        assert PCBUS = '1' report "PCBUS incorrect in FETCH1: " & std_logic'image(PCBUS);
+        assert ARLOAD = '1' report "ARLOAD incorrect in FETCH1: " & std_logic'image(ARLOAD);
+        
+        wait for period;
+        report "FETCH2";
+        
+        wait for period;
+        report "FETCH3";
+        
+        wait for period;
+        report "MVAC1";
+        assert RLOAD = '1' report "RLOAD";
+        assert ACBUS = '1' report "ACBUS";
+        assert alu = "0000" report "ALU commands";
+
+        ir <= "00100"; --MOVR
+        wait for period;
+        report "FETCH1";
+        assert PCBUS = '1' report "PCBUS incorrect in FETCH1: " & std_logic'image(PCBUS);
+        assert ARLOAD = '1' report "ARLOAD incorrect in FETCH1: " & std_logic'image(ARLOAD);
+        
+        wait for period;
+        report "FETCH2";
+        
+        wait for period;
+        report "FETCH3";
+        
+        wait for period;
+        report "MOVR1";
+        assert RBUS = '1' report "RBUS";
+        assert ACLOAD = '1' report "ACLOAD";
+        assert alu = "0000" or alu = "1001" or alu = "1001" report "ALU commands: " & to_hstring(alu);
+        
+        wait for period;
+        ir <= "00101"; -- JMP1
+        report "FETCH1";
+        assert PCBUS = '1' report "PCBUS incorrect in FETCH1: " & std_logic'image(PCBUS);
+        assert ARLOAD = '1' report "ARLOAD incorrect in FETCH1: " & std_logic'image(ARLOAD);
+        
+        wait for period;
+        report "FETCH2";
+        
+        wait for period;
+        report "FETCH3";
+        
+        wait for period;
+        report "JMP1";
+        assert ARINC = '1' report "ARINC";
+        assert MEMBUS = '1' report "MEMBUS";
+        assert R = '1' report "R";
+        assert DRLOAD = '1' report "DRLOAD";
+        
+        wait for period;
+        report "JMP2";
+        assert TRLOAD = '1' report "TRLOAD";
+        assert MEMBUS = '1' report "MEMBUS";
+        assert R = '1' report "R";
+        assert DRLOAD = '1' report "DRLOAD";
+        
+        wait for period;
+        report "JMP3";
+        assert PCLOAD = '1' report "PCLOAD";
+        assert TRBUS = '1' report "TRBUS";
+        assert DRHBUS = '1' report "DRLBUS";
+        
+        wait for period;
+        ir <= "00110"; -- JMPZ
+        report "FETCH1";
+        assert PCBUS = '1' report "PCBUS incorrect in FETCH1: " & std_logic'image(PCBUS);
+        assert ARLOAD = '1' report "ARLOAD incorrect in FETCH1: " & std_logic'image(ARLOAD);
+        
+        wait for period;
+        report "FETCH2";
+        
+        wait for period;
+        report "FETCH3";
+        
+        z <= '0';
+        wait for period;
+        report "JMPZ";
+        
+        wait for period;
+        report "JMPZN1";
+        assert PCINC = '1' report "PCINC";
+        
+        wait for period;
+        report "JMPZN2";
+        assert PCINC = '1' report "PCINC";
+        
+        wait for period;
+        report "FETCH1";
+        assert PCBUS = '1' report "PCBUS incorrect in FETCH1: " & std_logic'image(PCBUS);
+        assert ARLOAD = '1' report "ARLOAD incorrect in FETCH1: " & std_logic'image(ARLOAD);
+        
+        wait for period;
+        report "FETCH2";
+        
+        wait for period;
+        report "FETCH3";
+        
+        z <= '1';
+        
+        wait for period;
+        report "JMPZ";
+        
+        wait for period;
+        report "JMPZY1";
+        assert ARINC = '1' report "ARINC";
+        assert MEMBUS = '1' report "MEMBUS";
+        assert R = '1' report "R";
+        assert DRLOAD = '1' report "DRLOAD";
+        
+        wait for period;
+        report "JMPZY2";
+        assert TRLOAD = '1' report "TRLOAD";
+        assert MEMBUS = '1' report "MEMBUS";
+        assert R = '1' report "R";
+        assert DRLOAD = '1' report "DRLOAD";
+        
+        wait for period;
+        report "JMPZY3";
+        assert PCLOAD = '1' report "PCLOAD";
+        assert TRBUS = '1' report "TRBUS";
+        assert DRHBUS = '1' report "DRHBUS";
+        
+        wait for period;
+        ir <= "00111"; -- JMPNZ
+        report "FETCH1";
+        assert PCBUS = '1' report "PCBUS incorrect in FETCH1: " & std_logic'image(PCBUS);
+        assert ARLOAD = '1' report "ARLOAD incorrect in FETCH1: " & std_logic'image(ARLOAD);
+        
+        wait for period;
+        report "FETCH2";
+        
+        wait for period;
+        report "FETCH3";
+        
+        z <= '0';
+        wait for period;
+        report "JMPNZ";
+        
+        wait for period;
+        report "JMPNZY1";
+        assert ARINC = '1' report "ARINC";
+        assert MEMBUS = '1' report "MEMBUS";
+        assert R = '1' report "R";
+        assert DRLOAD = '1' report "DRLOAD";
+        
+        wait for period;
+        report "JMPNZY2";
+        assert TRLOAD = '1' report "TRLOAD";
+        assert MEMBUS = '1' report "MEMBUS";
+        assert R = '1' report "R";
+        assert DRLOAD = '1' report "DRLOAD";
+        
+        wait for period;
+        report "JMPNZY3";
+        assert PCLOAD = '1' report "PCLOAD";
+        assert TRBUS = '1' report "TRBUS";
+        assert DRHBUS = '1' report "DRHBUS";
+        
+        wait for period;
+        report "FETCH1";
+        assert PCBUS = '1' report "PCBUS incorrect in FETCH1: " & std_logic'image(PCBUS);
+        assert ARLOAD = '1' report "ARLOAD incorrect in FETCH1: " & std_logic'image(ARLOAD);
+        
+        wait for period;
+        report "FETCH2";
+        
+        wait for period;
+        report "FETCH3";
+        
+        z <= '1';
+        wait for period;
+        report "JMPNZ";
+        
+        wait for period;
+        report "JMPNZY1";
+        assert PCINC = '1' report "PCINC";
+        
+        wait for period;
+        report "JMPNZY2";
+        assert PCINC = '1' report "PCINC";
+        
+        ir <= "01000"; --ADD
+        wait for period;
+        report "FETCH1";
+        assert PCBUS = '1' report "PCBUS incorrect in FETCH1: " & std_logic'image(PCBUS);
+        assert ARLOAD = '1' report "ARLOAD incorrect in FETCH1: " & std_logic'image(ARLOAD);
+        
+        wait for period;
+        report "FETCH2";
+        
+        wait for period;
+        report "FETCH3";
+        
+        wait for period;
+        report "ADD1";
+        assert RBUS = '1' report "RBUS";
+        assert ACLOAD = '1' report "ACLOAD";
+        assert alu = "0001" report "ALU: " & to_hstring(alu);
+        
+        ir <= "01001"; --ADD
+        wait for period;
+        report "FETCH1";
+        assert PCBUS = '1' report "PCBUS incorrect in FETCH1: " & std_logic'image(PCBUS);
+        assert ARLOAD = '1' report "ARLOAD incorrect in FETCH1: " & std_logic'image(ARLOAD);
+        
+        wait for period;
+        report "FETCH2";
+        
+        wait for period;
+        report "FETCH3";
+        
+        wait for period;
+        report "SUB1";
+        assert RBUS = '1' report "RBUS";
+        assert ACLOAD = '1' report "ACLOAD";
+        assert alu = "0010" report "ALU: " & to_hstring(alu);
+        
+        ir <= "01010"; --INAC
+        wait for period;
+        report "FETCH1";
+        assert PCBUS = '1' report "PCBUS incorrect in FETCH1: " & std_logic'image(PCBUS);
+        assert ARLOAD = '1' report "ARLOAD incorrect in FETCH1: " & std_logic'image(ARLOAD);
+        
+        wait for period;
+        report "FETCH2";
+        
+        wait for period;
+        report "FETCH3";
+        
+        wait for period;
+        report "INAC1";
+        assert ACLOAD = '1' report "ACLOAD";
+        assert alu = "0011" report "ALU: " & to_hstring(alu);
+        
+        ir <= "01011"; --CLAC
+        wait for period;
+        report "FETCH1";
+        assert PCBUS = '1' report "PCBUS incorrect in FETCH1: " & std_logic'image(PCBUS);
+        assert ARLOAD = '1' report "ARLOAD incorrect in FETCH1: " & std_logic'image(ARLOAD);
+        
+        wait for period;
+        report "FETCH2";
+        
+        wait for period;
+        report "FETCH3";
+        
+        wait for period;
+        report "CLAC1";
+        assert ACLOAD = '1' report "ACLOAD";
+        assert alu = "0100" report "ALU: " & to_hstring(alu);
+        
+        ir <= "01100"; --AND
+        wait for period;
+        report "FETCH1";
+        assert PCBUS = '1' report "PCBUS incorrect in FETCH1: " & std_logic'image(PCBUS);
+        assert ARLOAD = '1' report "ARLOAD incorrect in FETCH1: " & std_logic'image(ARLOAD);
+        
+        wait for period;
+        report "FETCH2";
+        
+        wait for period;
+        report "FETCH3";
+        
+        wait for period;
+        report "AND1";
+        assert RBUS = '1' report "RBUS";
+        assert ACLOAD = '1' report "ACLOAD";
+        assert alu = "0101" report "ALU: " & to_hstring(alu);
+        
+        ir <= "01101"; --OR
+        wait for period;
+        report "FETCH1";
+        assert PCBUS = '1' report "PCBUS incorrect in FETCH1: " & std_logic'image(PCBUS);
+        assert ARLOAD = '1' report "ARLOAD incorrect in FETCH1: " & std_logic'image(ARLOAD);
+        
+        wait for period;
+        report "FETCH2";
+        
+        wait for period;
+        report "FETCH3";
+        
+        wait for period;
+        report "OR1";
+        assert RBUS = '1' report "RBUS";
+        assert ACLOAD = '1' report "ACLOAD";
+        assert alu = "0110" report "ALU: " & to_hstring(alu);
+        
+        ir <= "01110"; -- XOR
+        wait for period;
+        report "FETCH1";
+        assert PCBUS = '1' report "PCBUS incorrect in FETCH1: " & std_logic'image(PCBUS);
+        assert ARLOAD = '1' report "ARLOAD incorrect in FETCH1: " & std_logic'image(ARLOAD);
+        
+        wait for period;
+        report "FETCH2";
+        
+        wait for period;
+        report "FETCH3";
+        
+        wait for period;
+        report "XOR1";
+        assert RBUS = '1' report "RBUS";
+        assert ACLOAD = '1' report "ACLOAD";
+        assert alu = "1000" report "ALU: " & to_hstring(alu);
+        
+        ir <= "01111"; --NOT
+        wait for period;
+        report "FETCH1";
+        assert PCBUS = '1' report "PCBUS incorrect in FETCH1: " & std_logic'image(PCBUS);
+        assert ARLOAD = '1' report "ARLOAD incorrect in FETCH1: " & std_logic'image(ARLOAD);
+        
+        wait for period;
+        report "FETCH2";
+        
+        wait for period;
+        report "FETCH3";
+        
+        wait for period;
+        report "NOT1";
+        assert ACLOAD = '1' report "ACLOAD";
+        assert alu = "0111" report "ALU: " & to_hstring(alu);
+        
+        ir <= "10000"; --LSHIFT
+        wait for period;
+        report "FETCH1";
+        assert PCBUS = '1' report "PCBUS incorrect in FETCH1: " & std_logic'image(PCBUS);
+        assert ARLOAD = '1' report "ARLOAD incorrect in FETCH1: " & std_logic'image(ARLOAD);
+        
+        wait for period;
+        report "FETCH2";
+        
+        wait for period;
+        report "FETCH3";
+        
+        wait for period;
+        report "LSHIFT";
+        assert ACLOAD = '1' report "ACLOAD";
+        assert alu = "1011" report "LSHIFT ALU: " & to_hstring(alu);
+        
+        ir <= "10001"; --RSHIFT
+        wait for period;
+        report "FETCH1";
+        assert PCBUS = '1' report "PCBUS incorrect in FETCH1: " & std_logic'image(PCBUS);
+        assert ARLOAD = '1' report "ARLOAD incorrect in FETCH1: " & std_logic'image(ARLOAD);
+        
+        wait for period;
+        report "FETCH2";
+        
+        wait for period;
+        report "FETCH3";
+        
+        wait for period;
+        report "RSHIFT";
+        assert ACLOAD = '1' report "ACLOAD";
+        assert alu = "1100" report "RSHIFT ALU: " & to_hstring(alu);
+        
         wait for period;
         report "FETCH1";
         assert PCBUS = '1' report "PCBUS incorrect in FETCH1: " & std_logic'image(PCBUS);
         assert ARLOAD = '1' report "ARLOAD incorrect in FETCH1: " & std_logic'image(ARLOAD);
         stop <= true;
+        report "-------------DONE--------------";
         wait;
     end process;
 
