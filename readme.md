@@ -6,3 +6,10 @@ From memory it also used the RAM chip on the board but it looks like I didn't in
 
 ## What it does
 See the [microcode](CU_REG/control_unit/microcode.vhd).
+
+## TODO
+- [ ] Refactor to suit a naming convention (any as long as its consistant.
+- [ ] Make register a generic entity the same way as the buffer.
+- [ ] Separate the address and data busses.
+- [ ] Test ALU
+- [ ] Document to help people learn from this!
