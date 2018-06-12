@@ -1,6 +1,7 @@
 library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
+use work.constants.all;
 
 entity top_model is
 port(
@@ -92,30 +93,29 @@ architecture struct of top_model is
     
     component small_memory is
     port( 
-        adr     : in  std_logic_vector(6 downto 0); -- address to use
-        o0      : out std_logic_vector(7 downto 0); -- output data
-        i0      : in std_logic_vector(7 downto 0);  -- input data
-        r, w    : in std_logic := '0'               -- read or write
+        adr     : in  std_logic_vector(6 downto 0);
+        o0      : out std_logic_vector(7 downto 0);
+        i0      : in std_logic_vector(7 downto 0); 
+        r, w    : in std_logic := '0'              
     );
     end component small_memory;
 
-    constant DB_WIDTH : integer := 16;
-    constant REG_WIDTH: integer := 8;
+    constant REG_WIDTH: integer := DB_WIDTH/2;
 
     signal databus  : std_logic_vector(DB_WIDTH-1 downto 0);
     
-    -- dummy not used
-    signal alu_dum  :std_logic_vector(6 downto 0); 
+    -- Dummy not used
+    signal alu_dum  : std_logic_vector(6 downto 0); 
     signal w1       : std_logic_vector(6 downto 0);
     signal w2       : std_logic_vector(6 downto 0);
     
-    -- from the intrustion reg to the cu
+    -- From the intrustion reg to the cu
     signal ir       : std_LOGIC_VECTOR(REG_WIDTH-1 downto 0);
     
     signal sig_mem_to_bus : std_logic_vector(REG_WIDTH-1 downto 0);
     signal sig_bus_to_mem : std_logic_vector(REG_WIDTH-1 downto 0);
     
-    -- from the cu to the alu
+    -- From the cu to the alu
     signal sig_alu_cmd    : std_logic_vector(3 downto 0);
     
     -- command signals from cu to other places
@@ -142,11 +142,9 @@ architecture struct of top_model is
     signal zload    : std_logic;
     signal z        : std_logic;
     
-    -- Outputs from the pc and ar
+    -- Outputs from the Registers
     signal pcbridge : std_logic_vector(DB_WIDTH-1 downto 0);
     signal arbridge : std_logic_vector(DB_WIDTH-1 downto 0);
-    
-    -- Outputs from the dr, tr, ac and alu and r
     signal drbridge : std_logic_vector(REG_WIDTH-1 downto 0); 
     signal trbridge : std_logic_vector(REG_WIDTH-1 downto 0);
     signal acbridge : std_logic_vector(REG_WIDTH-1 downto 0); 
@@ -178,9 +176,9 @@ begin
     -- Connect the memory to the outside world
     mem_wr  <= wr;
     mem_rd  <= rd;
-    mem_addr <= arbridge(6 downto 0);
-    sig_mem_to_bus <= mem_out;
+    mem_addr<= arbridge(6 downto 0);
     mem_in  <= sig_bus_to_mem;
+    sig_mem_to_bus <= mem_out;
 
     -- Connect the buffer outputs to the databus
     databus(REG_WIDTH-1 downto 0) <= drl_buff_db;
