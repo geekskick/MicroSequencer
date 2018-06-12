@@ -1,21 +1,19 @@
--- Code your design here
 library IEEE;
 use IEEE.std_logic_1164.all;
 
-entity buff is
-	generic(data_width: natural);
-	port(
-    	IBus: in std_logic_vector(data_width-1 downto 0);
-        OBus: out std_logic_vector(data_width-1 downto 0);
-        e: in std_logic
-	);
+entity tristate_buffer is
+    generic(data_width: natural);
+    port(
+        a   : in std_logic_vector(data_width-1 downto 0);
+        q   : out std_logic_vector(data_width-1 downto 0);
+        en  : in std_logic
+    );
 
-end entity buff;
+end entity tristate_buffer;
 
 architecture behav of buff is
 
 begin
-    
-    OBus <= IBus when (e = '1') else (others => 'Z');
+    q <= a when (en = '1') else (others => 'Z');
 
 end architecture behav;
