@@ -2,31 +2,39 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 
 entity z_reg is
+    generic(
+        data_width: natural
+        );
     port(
-        clk : in STD_LOGIC;
-        inp : in STD_LOGIC_VECTOR (7 downto 0);
-        enb : in STD_LOGIC;
-        otp : out STD_LOGIC
+        clk : in std_logic;
+        d   : in std_logic_vector (data_width-1 downto 0);
+        en  : in std_logic;
+        q   : out std_logic_vector
         );
 end z_reg;
 
 architecture beh of z_reg is
-    signal buf: STD_LOGIC;
+    signal q_i: std_logic;
+
 begin
-    process(enb, clk, inp)
-        begin
-        
-        if inp = "00000000" then
-            buf <= '1';
-        else 
-            buf <= '0';
-        end if;
-        
-        if rising_edge(clk) and enb = '1' then
-                otp <= buf;
-        end if;     
-        if enb = '0' then
-            otp <= 'Z';
-        end if;
+
+    -- On clock tick, set the q_i signal to '1' if
+    -- all the data inputs are 0. If the enable is low
+    -- then set the output to High Impedance.
+    process(clk, en, d)
+    begin
+    if en = '1' then
+        if rising_edge(clk) then
+
+            -- This uses VHDL 2008 'nor' so make sure the compiler is set up 
+            -- correctly
+            q_i <= nor d;
+        end if;  
+    else 
+        q_i <= 'Z';   
+    end if;
     end process;
+
+    q <= q_i;
+
 end beh;

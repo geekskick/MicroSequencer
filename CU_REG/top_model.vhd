@@ -224,43 +224,44 @@ cu_inst:
         );
     
     -- Program counter
-    pc_inst: sixteen_bit_data_reg_with_incr port map(databus, clk, pcload, pcinc, pcbridge);
+pc_inst: sixteen_bit_data_reg_with_incr port map(databus, clk, pcload, pcinc, pcbridge);
     
     -- Address reg
-    ar_inst: sixteen_bit_data_reg_with_incr port map(databus, clk, arload, arinc, arbridge);
+ar_inst: sixteen_bit_data_reg_with_incr port map(databus, clk, arload, arinc, arbridge);
     
     -- Data reg
-    dr_inst: eight_bit_data_reg port map(drload, clk, databus(REG_WIDTH-1  downto 0), drbridge);
+dr_inst: eight_bit_data_reg port map(drload, clk, databus(REG_WIDTH-1  downto 0), drbridge);
     
-    -- t reg
-    tr_inst: eight_bit_data_reg port map(trload, clk, drbridge, trbridge);
+    -- T reg
+tr_inst: eight_bit_data_reg port map(trload, clk, drbridge, trbridge);
     
-    -- r reg
-    r_inst:  eight_bit_data_reg port map(rload, clk,  databus(REG_WIDTH-1  downto 0), rbridge); 
+    -- R reg
+r_inst:  eight_bit_data_reg port map(rload, clk,  databus(REG_WIDTH-1  downto 0), rbridge); 
     
-    -- accumulator
-    acc_inst: eight_bit_data_reg port map(acload, clk, alubridge, acbridge);
+    -- Accumulator
+acc_inst: eight_bit_data_reg port map(acload, clk, alubridge, acbridge);
     
-    -- alu
-    alu_inst: alu port map(signed(acbridge), signed(databus(REG_WIDTH-1 downto 0)), unsigned(sig_alu_cmd), alubridge);
+    -- ALU
+alu_inst: alu port map(signed(acbridge), signed(databus(REG_WIDTH-1 downto 0)), unsigned(sig_alu_cmd), alubridge);
     
-    -- register
-    z_inst: z_reg port map(clk, alubridge, zload, sig_z);
+    -- Z Register
+z_inst: z_reg port map(clk, alubridge, zload, sig_z);
     
-    -- instruction register
-    i_inst: eight_bit_data_reg port map(irload, clk, drbridge, ir);
+    -- Instruction Register
+i_inst: eight_bit_data_reg port map(irload, clk, drbridge, ir);
     
     -- memory
     -- ram_inst: small_memory port map(arbridge(6 downto 0), sig_mem_to_bus, sig_bus_to_mem,rd, wr);
      
-    -- Tri states                  width               in                      out                         enable
-    membusbuf_inst   : tristate_buffer generic map(REG_WIDTH)   port map(sig_mem_to_bus,        mem_buff_db,                membus);
-    busmembuf_inst   : tristate_buffer generic map(REG_WIDTH)   port map(databus(REG_WIDTH-1 downto 0),   sig_bus_to_mem,   busmem);
-    acbuff_inst      : tristate_buffer generic map(REG_WIDTH)   port map(acbridge,              ac_buff_db,                 acbus);
-    rbuff_inst       : tristate_buffer generic map(REG_WIDTH)   port map(rbridge,               r_buff_db,                  rbus);
-    pcbuf_inst       : tristate_buffer generic map(DB_WIDTH)    port map(pcbridge,              pc_buff_db,                 pcbus);
-    drhbuf_inst      : tristate_buffer generic map(REG_WIDTH)   port map(drbridge,              drh_buff_db,                drhbus);
-    drlbuf_inst      : tristate_buffer generic map(REG_WIDTH)   port map(drbridge,              drl_buff_db,                drlbus);
-    trbuf_inst       : tristate_buffer generic map(REG_WIDTH)   port map(trbridge,              tr_buff_db,                 trbus);
+    -- Tri states                              width               in                      out                         enable
+    -------------------------------------------------------------------------------------------------------------------------------
+membusbuf_inst   : tristate_buffer generic map(REG_WIDTH)   port map(sig_mem_to_bus,        mem_buff_db,                membus);
+busmembuf_inst   : tristate_buffer generic map(REG_WIDTH)   port map(databus(REG_WIDTH-1 downto 0),   sig_bus_to_mem,   busmem);
+acbuff_inst      : tristate_buffer generic map(REG_WIDTH)   port map(acbridge,              ac_buff_db,                 acbus);
+rbuff_inst       : tristate_buffer generic map(REG_WIDTH)   port map(rbridge,               r_buff_db,                  rbus);
+pcbuf_inst       : tristate_buffer generic map(DB_WIDTH)    port map(pcbridge,              pc_buff_db,                 pcbus);
+drhbuf_inst      : tristate_buffer generic map(REG_WIDTH)   port map(drbridge,              drh_buff_db,                drhbus);
+drlbuf_inst      : tristate_buffer generic map(REG_WIDTH)   port map(drbridge,              drl_buff_db,                drlbus);
+trbuf_inst       : tristate_buffer generic map(REG_WIDTH)   port map(trbridge,              tr_buff_db,                 trbus);
     
 end architecture struct;
