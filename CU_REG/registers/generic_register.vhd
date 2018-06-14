@@ -9,6 +9,7 @@ entity generic_register is
         clk : in std_logic;
         data: in std_logic_vector(data_width-1 downto 0);
         load: in std_logic;
+        inc : in std_logic;
         q   : out std_logic_vector(data_width-1 downto 0)
     );
 
@@ -20,10 +21,15 @@ architecture behav of generic_register is
 begin
     process(load, clk, data)
         begin
-            if load = '1' and rising_edge(clk) then
+        if rising_edge(clk) then
+            if load = '1' then
                 q_i <= data;
+            elsif inc = '1' then
+                q_i <= std_logic_vector(to_integer(q_i) + 1);
             end if;
+        end if;
     end process;
 
     q <= q_i;
+    
 end architecture behav;

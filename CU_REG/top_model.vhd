@@ -54,25 +54,19 @@ architecture struct of top_model is
     );
     end component;
     
-    component sixteen_bit_data_reg_with_incr is
-    port(
-        input   : in std_logic_vector (15 downto 0);
-        clk     : in std_logic;
-        pcld    : in  std_logic;
-        pcinc   : in std_logic;
-        output  : out std_logic_vector (15 downto 0)
+    component generic_buffer is
+    generic(
+        data_width: natural
         );
-    end component sixteen_bit_data_reg_with_incr; 
-    
-    component eight_bit_data_reg is
     port(
-        set     : in std_logic;
-        clk     : in std_logic;
-        inp     : in std_logic_vector (7 downto 0);
-        otp     : out std_logic_vector (7 downto 0)
-        );
-    end component eight_bit_data_reg;
-    
+        clk : in std_logic;
+        data: in std_logic_vector(data_width-1 downto 0);
+        load: in std_logic;
+        inc : in std_logic;
+        q   : out std_logic_vector(data_width-1 downto 0)
+    );
+    end component generic_buffer; 
+        
     component z_reg is
     port(
         clk     : in std_logic;
@@ -221,25 +215,85 @@ cu_inst:
         curr_add_h  => w1, 
         curr_add_l  => w2, 
         curr_alu_s  => alu_dum
-        );
+    );
     
     -- Program counter
-pc_inst: sixteen_bit_data_reg_with_incr port map(databus, clk, pcload, pcinc, pcbridge);
+pc_inst: 
+    generic_register generic map(
+        data_width => DB_WIDTH
+    ),
+    port map(
+        clk     => clk, 
+        data    => databus, 
+        load    => pcload, 
+        inc     => pcinc, 
+        q       => pcbridge
+    );
     
     -- Address reg
-ar_inst: sixteen_bit_data_reg_with_incr port map(databus, clk, arload, arinc, arbridge);
+ar_inst: 
+    generic_register generic map(
+        data_width => DB_WIDTH
+    ),
+    port map(
+        clk     => clk, 
+        data    => databus, 
+        load    => arload, 
+        inc     => arinc, 
+        q       => arbridge
+    );
     
     -- Data reg
-dr_inst: eight_bit_data_reg port map(drload, clk, databus(REG_WIDTH-1  downto 0), drbridge);
+dr_inst: 
+    generic_register generic map(
+        data_width => REG_WIDTH
+    ),
+    port map(
+        clk     => clk, 
+        data    => databus(REG_WIDTH-1 downto 0), 
+        load    => drload, 
+        inc     => '0', 
+        q       => drbridge
+    );
     
     -- T reg
-tr_inst: eight_bit_data_reg port map(trload, clk, drbridge, trbridge);
+tr_inst: 
+    generic_register generic map(
+        data_width => REG_WIDTH
+    ),
+    port map(
+        clk     => clk, 
+        data    => drbridge, 
+        load    => trload, 
+        inc     => '0', 
+        q       => trbridge
+    );
     
     -- R reg
-r_inst:  eight_bit_data_reg port map(rload, clk,  databus(REG_WIDTH-1  downto 0), rbridge); 
+r_inst: 
+    generic_register generic map(
+        data_width => REG_WIDTH
+    ),
+    port map(
+        clk     => clk, 
+        data    => databus(REG_WIDTH-1 downto 0), 
+        load    => rload, 
+        inc     => '0', 
+        q       => rbridge
+    );
     
     -- Accumulator
-acc_inst: eight_bit_data_reg port map(acload, clk, alubridge, acbridge);
+acc_inst: 
+    generic_register generic map(
+        data_width => REG_WIDTH
+    ),
+    port map(
+        clk     => clk, 
+        data    => alubridge, 
+        load    => acload, 
+        inc     => '0', 
+        q       => acbridge
+    );
     
     -- ALU
 alu_inst: alu port map(signed(acbridge), signed(databus(REG_WIDTH-1 downto 0)), unsigned(sig_alu_cmd), alubridge);
@@ -248,7 +302,17 @@ alu_inst: alu port map(signed(acbridge), signed(databus(REG_WIDTH-1 downto 0)), 
 z_inst: z_reg port map(clk, alubridge, zload, sig_z);
     
     -- Instruction Register
-i_inst: eight_bit_data_reg port map(irload, clk, drbridge, ir);
+i_inst: 
+    generic_register generic map(
+        data_width => REG_WIDTH
+    ),
+    port map(
+        clk     => clk, 
+        data    => drbirdge, 
+        load    => irload, 
+        inc     => '0', 
+        q       => ir
+    );
     
     -- memory
     -- ram_inst: small_memory port map(arbridge(6 downto 0), sig_mem_to_bus, sig_bus_to_mem,rd, wr);
