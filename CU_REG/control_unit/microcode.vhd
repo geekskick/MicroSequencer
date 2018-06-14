@@ -1,27 +1,27 @@
--- Code your testbench here
 library IEEE;
 use IEEE.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 entity rom is
-port( addr: in std_logic_vector(5 downto 0);
-	output: out std_logic_vector(20 downto 0)
+port( 
+    addr    : in std_logic_vector(5 downto 0);
+	output  : out std_logic_vector(20 downto 0)
 );
 end entity;
 
 architecture struct of rom is
 
-    -- conditions 
-    -- 1  11
-    -- Z  00  
-    -- nZ 01
-    -- xx 10
+-- conditions 
+-- 1  11
+-- Z  00  
+-- nZ 01
+-- xx 10
 
-    -- branch types
-    -- JUMP 00
-    -- MAP  10  
-    -- CALL 01
-    -- RET  11
+-- branch types
+-- JUMP 00
+-- MAP  10  
+-- CALL 01
+-- RET  11
 
 
 	--  M1           M2        M3      ALU 

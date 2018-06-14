@@ -5,7 +5,8 @@ use ieee.numeric_std.all;
 entity top_model_cu is
     port( 
         -- INPUTS
-        z, clk    : in std_logic;
+        z,        : in std_logic;
+        clk       : in std_logic;
         IR        : in std_logic_vector(4 downto 0);    -- INSTRUCTION REGISTER LOW NIBBLE + 1
        
         -- COMMAND SIGNALS
@@ -53,19 +54,19 @@ architecture structure of top_model_cu is
     );
     end component microsequencer;
    
-
     component three_bit_decoder is
     port(
-        input   : in std_logic_vector(2 downto 0);
-        O0, O1, O2, O3, O4, O5, O6, O7 : out std_logic
+        a   : in std_logic_vector(2 downto 0);
+        d0  : out std_logic, 
+        d1  : out std_logic, 
+        d2  : out std_logic, 
+        d3  : out std_logic, 
+        d4  : out std_logic, 
+        d5  : out std_logic, 
+        d6  : out std_logic, 
+        d7  : out std_logic
     );
     end component three_bit_decoder;
-    
-    component one_bit_decoder is
-    port(input  : in std_logic;
-         O0, O1 : out std_logic
-         );
-    end component one_bit_decoder;
      
      -- 7 SEGMENT DISPLAY LOGIC
     component seg is
@@ -88,7 +89,7 @@ begin
     ALUSEL  : seg port map( ALUSELECT,  
                             curr_alu_S);            -- THE ALU SELECT VALUE DISPLAY
 
-    --  M1           M2        M3      ALU 
+--     M1           M2        M3         ALU 
 -- NOP   000    NOP   000   NOP 0   NOP     0000
 -- ARIN  001    PCIN  001   DRM 1   PLUS    0001                    
 -- ARDT  010    PCDT  010
@@ -106,9 +107,44 @@ begin
 --                                  RSHIFT  1100  
 
     -- DECODER INSTANTIATION, WHERE EACH MICROCODE FIELD (M1, M2, M3) GETS IT'S OWN DECODER
-    m1_ops   : three_bit_decoder port map(m1, nop1, arin, ardt, arpc, trdr, error, acr, acdr);
-    m2_ops   : three_bit_decoder port map(m2, nop2, pcin, pcdt, irdr, rac, mdr, drac, zalu);
-    m3_ops   : one_bit_decoder port map(m3, nop3, drm);
+m1_ops: 
+    three_bit_decoder port map(
+        a   => m1, 
+        d0  => nop1, 
+        d1  => arin, 
+        d2  => ardt, 
+        d3  => arpc, 
+        d4  => trdr, 
+        d5  => error, 
+        d6  => acr, 
+        d7  => acdr
+    );
+
+m2_ops: 
+    three_bit_decoder port map(
+        a   => m2, 
+        d0  => nop2, 
+        d1  => pcin, 
+        d2  => pcdt, 
+        d3  => irdr, 
+        d4  => rac, 
+        d5  => mdr, 
+        d6  => drac, 
+        d7  => zalu
+    );
+
+m3_ops: 
+    three_bit_decoder port map(
+        a   => "00" & m3, 
+        d0  => nop3, 
+        d1  => drm, 
+        d2  => open, 
+        d3  => open, 
+        d4  => open, 
+        d5  => open, 
+        d6  => open,
+        d7  => open
+    );
     
      -- INSTANTIATE THE MICROSEQUENCER
     mseq    : microsequencer port map(clk, z, IR, curr_add, m1, m2, m3, ALUSELECT);
