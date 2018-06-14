@@ -13,6 +13,7 @@ entity z_reg is
         );
 end z_reg;
 
+
 architecture beh of z_reg is
     signal q_i: std_logic;
 
