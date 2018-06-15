@@ -1,7 +1,8 @@
 library IEEE;
+library xil_defaultlib;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
-use work.constants.all;
+use xil_defaultlib.constants.all;
 
 entity top_model is
 port(
@@ -46,18 +47,13 @@ architecture struct of top_model is
         IR          : in std_logic_vector(4 downto 0); -- INSTRUCTION REGISTER LOW NIBBLE + 1
        
         -- COMMAND SIGNALS
-        error, arload, arinc, r, w, membus, busmem, pcinc, pcload, pcbus, drlbus, drhbus, drload, trload, trbus, irload, rload, rbus, acload, acbus, zload    : out std_logic;
+        error, arload, arinc, rd, wr, membus, busmem, pcinc, pcload, pcbus, drlbus, drhbus, drload, trload, trbus, irload, rload, rbus, acload, acbus, zload    : out std_logic;
 
-        alu_cmd : out std_logic_vector(3 downto 0); -- TO THE ALU INPUT
-       
-        --segment displayers
-        curr_add_H: out std_logic_vector(6 downto 0); -- HIGH NIBBLE OF CURRENT MICROCODE ADDRESS
-        curr_add_L: out std_logic_vector(6 downto 0); -- LOW NIBBLE OF CURRENT MICROCODE ADDRESS
-        curr_alu_S: out std_logic_vector(6 downto 0)  -- ALUSELECT DISPLAY
+        alu_cmd : out std_logic_vector(3 downto 0)
     );
     end component;
     
-    component generic_buffer is
+    component generic_register is
     generic(
         data_width: natural
         );
@@ -68,7 +64,17 @@ architecture struct of top_model is
         inc : in std_logic;
         q   : out std_logic_vector(data_width-1 downto 0)
     );
-    end component generic_buffer; 
+    end component generic_register; 
+    
+    component nor_vector is
+    generic(
+        v_width : natural
+    );
+    port(
+        d   : in std_logic_vector(v_width-1 downto 0);
+        q   : out std_logic
+    );
+    end component nor_vector;
     
     component tristate_buffer is
     generic(data_width: natural);
@@ -91,11 +97,7 @@ architecture struct of top_model is
     constant REG_WIDTH: integer := DB_WIDTH/2;
 
     signal databus  : std_logic_vector(DB_WIDTH-1 downto 0);
-    
-    -- Dummy not used
-    signal alu_dum  : std_logic_vector(6 downto 0); 
-    signal w1       : std_logic_vector(6 downto 0);
-    signal w2       : std_logic_vector(6 downto 0);
+    signal ac_is_zero : std_logic_vector(0 downto 0);
     
     -- From the intrustion reg to the cu
     signal ir       : std_logic_vector(REG_WIDTH-1 downto 0);
@@ -128,7 +130,7 @@ architecture struct of top_model is
     signal acload   : std_logic;
     signal acbus    : std_logic;
     signal zload    : std_logic;
-    signal z        : std_logic;
+    signal z        : std_logic_vector(0 downto 0);
     
     -- Outputs from the Registers
     signal pcbridge : std_logic_vector(DB_WIDTH-1 downto 0);
@@ -152,7 +154,7 @@ architecture struct of top_model is
 
 begin
     -- Test bench signals
-    tb_z    <= sig_z;
+    tb_z    <= z(0);
     tb_ir   <= ir;
     tb_pc   <= pc_buff_db;
     tb_drl  <= drl_buff_db;
@@ -181,7 +183,7 @@ begin
     -- Control unit
 cu_inst: 
     top_model_cu port map(
-        z           => z,
+        z           => z(0),
         clk         => clk,
         ir          => ir(4 downto 0),
         error       => error,
@@ -205,17 +207,14 @@ cu_inst:
         acload      => acload, 
         acbus       => acbus, 
         zload       => zload, 
-        alu_cmd     => sig_alu_cmd, 
-        curr_add_h  => w1, 
-        curr_add_l  => w2, 
-        curr_alu_s  => alu_dum
+        alu_cmd     => sig_alu_cmd
     );
     
     -- Program counter
 pc_inst: 
     generic_register generic map(
         data_width => DB_WIDTH
-    ),
+    )
     port map(
         clk     => clk, 
         data    => databus, 
@@ -228,7 +227,7 @@ pc_inst:
 ar_inst: 
     generic_register generic map(
         data_width => DB_WIDTH
-    ),
+    )
     port map(
         clk     => clk, 
         data    => databus, 
@@ -241,7 +240,7 @@ ar_inst:
 dr_inst: 
     generic_register generic map(
         data_width => REG_WIDTH
-    ),
+    )
     port map(
         clk     => clk, 
         data    => databus(REG_WIDTH-1 downto 0), 
@@ -254,7 +253,7 @@ dr_inst:
 tr_inst: 
     generic_register generic map(
         data_width => REG_WIDTH
-    ),
+    )
     port map(
         clk     => clk, 
         data    => drbridge, 
@@ -267,7 +266,7 @@ tr_inst:
 r_inst: 
     generic_register generic map(
         data_width => REG_WIDTH
-    ),
+    )
     port map(
         clk     => clk, 
         data    => databus(REG_WIDTH-1 downto 0), 
@@ -280,7 +279,7 @@ r_inst:
 acc_inst: 
     generic_register generic map(
         data_width => REG_WIDTH
-    ),
+    )
     port map(
         clk     => clk, 
         data    => alubridge, 
@@ -302,23 +301,32 @@ alu_inst:
 z_inst: 
     generic_register generic map(
         data_width => 1
-    ),
+    )
     port map(
         clk     => clk, 
-        data    => nor alubridge,
+        data    => ac_is_zero,
         load    => zload,
         inc     => '0',
-        q       => sig_z
+        q       => z
+    );
+    
+nor_inst:
+    nor_vector generic map(
+        v_width => DB_WIDTH
+    )
+    port map(
+        d => alubridge,
+        q => ac_is_zero(0)
     );
     
     -- Instruction Register
 i_inst: 
     generic_register generic map(
         data_width => REG_WIDTH
-    ),
+    )
     port map(
         clk     => clk, 
-        data    => drbirdge, 
+        data    => drbridge, 
         load    => irload, 
         inc     => '0', 
         q       => ir

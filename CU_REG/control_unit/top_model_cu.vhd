@@ -4,20 +4,32 @@ use ieee.numeric_std.all;
 
 entity top_model_cu is
     port( 
-        -- INPUTS
-        z        : in std_logic;
-        clk       : in std_logic;
-        IR        : in std_logic_vector(4 downto 0);    -- INSTRUCTION REGISTER LOW NIBBLE + 1
-       
-        -- COMMAND SIGNALS
-        error, ARLOAD, ARINC, R, W, MEMBUS, BUSMEM, PCINC, PCLOAD, PCBUS, DRLBUS, DRHBUS, DRLOAD, TRLOAD, TRBUS, IRLOAD, RLOAD, RBUS, ACLOAD, ACBUS, ZLOAD    : out std_logic;
-
-        alu_cmd : out std_logic_vector(3 downto 0);     -- TO THE ALU INPUT
-       
-        --segment displayers
-        curr_add_H: out std_logic_vector(6 downto 0);   -- HIGH NIBBLE OF CURRENT MICROCODE ADDRESS
-        curr_add_L: out std_logic_vector(6 downto 0);   -- LOW NIBBLE OF CURRENT MICROCODE ADDRESS
-        curr_alu_S: out std_logic_vector(6 downto 0)    -- ALUSELECT DISPLAY
+        -- inputs
+        z       : in std_logic;
+        clk     : in std_logic;
+        ir      : in std_logic_vector(4 downto 0);    -- instruction register low nibble + 1
+        error   : out std_logic;
+        arload  : out std_logic;
+        arinc   : out std_logic;
+        rd      : out std_logic;
+        wr      : out std_logic; 
+        membus  : out std_logic;
+        busmem  : out std_logic;
+        pcinc   : out std_logic;
+        pcload  : out std_logic;
+        pcbus   : out std_logic;
+        drlbus  : out std_logic;
+        drhbus  : out std_logic;
+        drload  : out std_logic;
+        trload  : out std_logic; 
+        trbus   : out std_logic;
+        irload  : out std_logic;
+        rload   : out std_logic; 
+        rbus    : out std_logic;
+        acload  : out std_logic;
+        acbus   : out std_logic;
+        zload   : out std_logic;
+        alu_cmd : out std_logic_vector(3 downto 0)     -- to the alu input
     );
 end entity;
 
@@ -71,58 +83,11 @@ architecture structure of top_model_cu is
     );
     end component three_bit_decoder;
      
-     -- 7 SEGMENT DISPLAY LOGIC
-    component seg is
-    port(
-        Inumber : in std_logic_vector(3 downto 0);
-        ODisp   : out std_logic_vector(6 downto 0)
-    );
-    end component seg;
-    
-    
 begin
 
     -- DEBUGGING COMMANDS
-    haddr <= "00" & curr_add(5 downto 4) ;          -- THE HIGH NIBBLE OF THE CURRENT ADDRESS NEEDS TO BE MAPPED TO GO FROM 2 BITS TO 4
-
--- THE HIGH NIBBLE DISPLAY
-HDigit: 
-    seg port map(
-        INumber => haddr, 
-        ODisp => curr_add_H
-     );
-     
--- THE LOW NIBBLE DISPLAY
-LDigit: 
-    seg port map( 
-        INumber => curr_add(3 downto 0), 
-        ODisp   => curr_add_L
-    );  
-
--- THE ALU SELECT VALUE DISPLAY     
-ALUSEL: 
-    seg port map( 
-        INumber => ALUSELECT,  
-        ODisp   => curr_alu_S
-    );            
-
---     M1           M2        M3         ALU 
--- NOP   000    NOP   000   NOP 0   NOP     0000
--- ARIN  001    PCIN  001   DRM 1   PLUS    0001                    
--- ARDT  010    PCDT  010
--- ARPC  011    IRDR  011           MINU    0010
--- TRDR  100    RAC   100
--- ERROR 101    MDR   101           ACIN    0011
--- ACR   110    DRAC  110           ACZO    0100
--- ACDR  111    ZALU  111           AND     0101
---                                  OR      0110
---                                  NOT     0111
---                                  XOR     1000
---                                  THRU    1001
---                                  THRU    1010
---                                  LSHIFT  1011
---                                  RSHIFT  1100  
-
+    haddr <= "00" & curr_add(5 downto 4) ;          -- THE HIGH NIBBLE OF THE CURRENT ADDRESS NEEDS TO BE MAPPED TO GO FROM 2 BITS TO 4           
+    
     -- DECODER INSTANTIATION, WHERE EACH MICROCODE FIELD (M1, M2, M3) GETS IT'S OWN DECODER
 m1_ops: 
     three_bit_decoder port map(
@@ -177,28 +142,27 @@ mseq:
      );
     
      -- COMMAND SIGNALS AND WHEN THEY ARE ACTIVE
-     ARLOAD <= arpc     or ardt;
-     ARINC  <= arin;
-     R      <= drm;
-     W      <= mdr;
-     MEMBUS <= drm;
-     BUSMEM <= mdr;
-     PCINC  <= pcin;
-     PCLOAD <= pcdt;
-     PCBUS  <= arpc;
-     DRLBUS <= acdr     or mdr;
-     DRHBUS <= pcdt     or ardt;
-     DRLOAD <= drm      or drac;
-     TRLOAD <= trdr;
-     TRBUS  <= ardt     or pcdt;
-     IRLOAD <= irdr;
-     RLOAD  <= rac;
-     RBUS   <= '1' when(ALUSELECT = "0001" or ALUSELECT = "0010" or ALUSELECT = "0101" or ALUSELECT = "0110" or ALUSELECT = "1000" or acr = '1') else '0';
-     ACLOAD <= '1' when (to_integer(unsigned(ALUSELECT)) > 0) else '0';
-     ACBUS  <= drac     or rac;
-     ZLOAD  <= zalu;
-
-     alu_cmd <= ALUSELECT;
+     arload <= arpc or ardt;
+     arinc  <= arin;
+     rd     <= drm;
+     wr     <= mdr;
+     membus <= drm;
+     busmem <= mdr;
+     pcinc  <= pcin;
+     pcload <= pcdt;
+     pcbus  <= arpc;
+     drlbus <= acdr or mdr;
+     drhbus <= pcdt or ardt;
+     drload <= drm or drac;
+     trload <= trdr;
+     trbus  <= ardt or pcdt;
+     irload <= irdr;
+     rload  <= rac;
+     rbus   <= '1' when(aluselect = "0001" or aluselect = "0010" or aluselect = "0101" or aluselect = "0110" or aluselect = "1000" or acr = '1') else '0';
+     acload <= '1' when (to_integer(unsigned(aluselect)) > 0) else '0';
+     acbus  <= drac or rac;
+     zload  <= zalu;
+     alu_cmd <= aluselect;
      
      m3_vector <= "00" & m3;
 
