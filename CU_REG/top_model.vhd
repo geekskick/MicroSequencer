@@ -30,9 +30,10 @@ architecture struct of top_model is
 
     component ALU is
      port(
-        AC, SigBus  : in signed(7 downto 0); 
-        Logic       : in unsigned(3 downto 0); 
-        Output      : out std_logic_vector(7 downto 0)
+        op1     : in signed(7 downto 0); 
+        op2     : in signed(7 downto 0); 
+        command : in unsigned(3 downto 0); 
+        q       : out std_logic_vector(7 downto 0)
      );
     end component ALU;
 
@@ -66,15 +67,6 @@ architecture struct of top_model is
         q   : out std_logic_vector(data_width-1 downto 0)
     );
     end component generic_buffer; 
-        
-    component z_reg is
-    port(
-        clk     : in std_logic;
-        inp     : in std_logic_vector (7 downto 0);
-        enb     : in std_logic;
-        otp     : out std_logic
-        );
-    end component z_reg;
     
     component tristate_buffer is
     generic(data_width: natural);
@@ -296,10 +288,26 @@ acc_inst:
     );
     
     -- ALU
-alu_inst: alu port map(signed(acbridge), signed(databus(REG_WIDTH-1 downto 0)), unsigned(sig_alu_cmd), alubridge);
+alu_inst: 
+    alu port map(
+         op1        => signed(acbridge), 
+         op2        => signed(databus(REG_WIDTH-1 downto 0)), 
+         command    => unsigned(sig_alu_cmd), 
+         q          => alubridge
+    );
     
     -- Z Register
-z_inst: z_reg port map(clk, alubridge, zload, sig_z);
+z_inst: 
+    generic_register generic map(
+        data_width => 1
+    ),
+    port map(
+        clk     => clk, 
+        data    => nor alubridge,
+        load    => zload,
+        inc     => '0',
+        q       => sig_z
+    );
     
     -- Instruction Register
 i_inst: 

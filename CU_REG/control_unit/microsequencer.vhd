@@ -1,11 +1,11 @@
--- Code your design here
 library IEEE;
 use IEEE.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 entity microsequencer is
     port(
-        clk, z             : in std_logic;
+        clk                : in std_logic;
+        z                  : in std_logic;
         instruction        : in std_logic_vector(4 downto 0);
         current_addr_out   : out std_logic_vector(5 downto 0);
         m1                 : out std_logic_vector(2 downto 0);
@@ -17,11 +17,12 @@ end entity microsequencer;
 
 architecture behavioural of microsequencer is
 
-component rom is
-port( addr: in std_logic_vector(5 downto 0);
-    output: out std_logic_vector(20 downto 0)
-);
-end component;
+    component rom is
+    port( 
+        addr  : in std_logic_vector(5 downto 0);
+        data  : out std_logic_vector(20 downto 0)
+    );
+    end component;
 
     signal map_out      :std_logic_vector(5 downto 0):= (others => '0');        -- the IR value as an address
     signal plus_one     :std_logic_vector(5 downto 0):= (others => '0');        -- the next microinstruction
@@ -42,7 +43,11 @@ end component;
 
 begin
 
-    microcode: rom port map(current_addr, mem_out);
+microcode: 
+    rom port map(
+        addr => current_addr, 
+        data => mem_out
+    );
 
     current_addr_out <= current_addr;
 
@@ -56,7 +61,7 @@ begin
         plus_one when "00",
         next_addr when "10",
         map_out when "11",
-		return_add when "01",
+        return_add when "01",
         (others => '1') when others;
 
     -- LATCH THE NEXT ADDRESS INTO THE SUBROUTINE RETURN REGISTER
@@ -71,7 +76,7 @@ begin
     process(BT, cond, z)
     begin
 
-	-- logic_out <= "11"; -- default value for logic_out provided so that latches aren't created and muxes used instead
+    -- logic_out <= "11"; -- default value for logic_out provided so that latches aren't created and muxes used instead
 
     case BT is
                         -- JUMP

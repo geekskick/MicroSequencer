@@ -1,40 +1,43 @@
 library ieee;
 use ieee.std_logic_1164.all; 
-use ieee.numeric_std.all;  
+use ieee.numeric_std.all;
+use work.constants.all;
  
 entity ALU is
- port(
-   AC, SigBus : in signed(7 downto 0);           -- Input operands
-   Logic      : in unsigned(3 downto 0);         -- Operation to be performed
-   Output     : out std_logic_vector(7 downto 0) -- Output of ALU
-
- );
+    port(
+        op1      : in signed(7 downto 0);           -- Input operands
+        op2      : in signed(7 downto 0);           -- Input operands
+        command  : in unsigned(3 downto 0);         -- Operation to be performed
+        q        : out std_logic_vector((DB_WIDTH/2)-1 downto 0) -- Output of ALU
+    );
 end entity ALU;
  
-architecture Behavior of ALU is
-  signal ALUOutput: signed(7 downto 0);
-  begin
-  process(Logic, AC, SigBus) -- pm changed
-  begin
-    ALUOutput <= (others => '0'); 
-    case Logic is
-      when "0000" => NULL;
-      when "0001" => ALUOutput <= AC + SigBus;  -- ADD1
-      when "0010" => ALUOutput <= AC - SigBus;  -- SUB1
-      when "0011" => ALUOutput <= AC + 1;       -- INAC1
-      when "0100" => ALUOutput <= "00000000";   -- CLAC1
-      when "0101" => ALUOutput <= AC and SigBus;-- AND1
-      when "0110" => ALUOutput <= AC or SigBus; -- OR1
-      when "0111" => ALUOutput <= not AC;       -- NOT1
-      when "1000" => ALUOutput <= AC xor SigBus;-- XOR1
-      when "1001" => ALUOutput <= SigBus;       -- LDAC5
-      when "1010" => ALUOutput <= SigBus;       -- MOVR1
-      when "1011" => ALUOutput <= AC sll 1;     -- shift left 
-      when "1100" => ALUOutput <= AC srl 1;     -- shift right
-      when others => NULL;
-   end case;  
- end process;
+architecture behave of ALU is
+    signal q_i : signed((DB_WIDTH/2)-1 downto 0);
+
+begin
+
+    process(command, op2, op1) 
+    begin
+        q_i <= (others => '0'); 
+        case Logic is
+            when "0000" => NULL;
+            when "0001" => q_i <= op1 + op2;   -- ADD1
+            when "0010" => q_i <= op1 - op2;   -- SUB1
+            when "0011" => q_i <= op1 + 1;     -- INAC1
+            when "0100" => q_i <= (others => '0');  -- CLAC1
+            when "0101" => q_i <= op1 and op2; -- AND1
+            when "0110" => q_i <= op1 or op2;  -- OR1
+            when "0111" => q_i <= not op1;     -- NOT1
+            when "1000" => q_i <= op1 xor op2; -- XOR1
+            when "1001" => q_i <= op2;         -- LDAC5
+            when "1010" => q_i <= op2;         -- MOVR1
+            when "1011" => q_i <= op1 sll 1;   -- shift left 
+            when "1100" => q_i <= op1 srl 1;   -- shift right
+        when others => NULL;
+    end case;  
+    end process;
  
- Output <= std_logic_vector(ALUOutput);
+    q <= std_logic_vector(q_i);
 
 end architecture Behavior;
