@@ -6,6 +6,8 @@ use work.constants.all;
 entity top_model is
 port(
     clk    : in std_logic;
+
+    -- Testbench signals
     tb_z   : out std_logic;
     tb_ir  : out std_logic_vector(7 downto 0);
     tb_ac  : out std_logic_vector(7 downto 0);
@@ -82,7 +84,7 @@ architecture struct of top_model is
         adr     : in  std_logic_vector(6 downto 0);
         o0      : out std_logic_vector(7 downto 0);
         i0      : in std_logic_vector(7 downto 0); 
-        r, w    : in std_logic := '0'              
+        r, w    : in std_logic           
     );
     end component small_memory;
 
@@ -96,7 +98,7 @@ architecture struct of top_model is
     signal w2       : std_logic_vector(6 downto 0);
     
     -- From the intrustion reg to the cu
-    signal ir       : std_LOGIC_VECTOR(REG_WIDTH-1 downto 0);
+    signal ir       : std_logic_vector(REG_WIDTH-1 downto 0);
     
     signal sig_mem_to_bus : std_logic_vector(REG_WIDTH-1 downto 0);
     signal sig_bus_to_mem : std_logic_vector(REG_WIDTH-1 downto 0);
