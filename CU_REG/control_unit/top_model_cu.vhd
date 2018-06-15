@@ -24,6 +24,8 @@ end entity;
 architecture structure of top_model_cu is
 
     -- MICRO OPERATIONS FIELDS
+    -- As the decoder is now always 3 bit, the m3 signal needs to be converted to 
+    -- a vector.
     signal m3_vector    : std_logic_vector(2 downto 0);
     signal m3           : std_logic;
     signal m1           : std_logic_vector(2 downto 0);
@@ -83,12 +85,26 @@ begin
     -- DEBUGGING COMMANDS
     haddr <= "00" & curr_add(5 downto 4) ;          -- THE HIGH NIBBLE OF THE CURRENT ADDRESS NEEDS TO BE MAPPED TO GO FROM 2 BITS TO 4
 
-    HDigit  : seg port map( haddr, 
-                            curr_add_H);            -- THE HIGH NIBBLE DISPLAY
-    LDigit  : seg port map( curr_add(3 downto 0), 
-                            curr_add_L);            -- THE LOW NIBBLE DISPLAY
-    ALUSEL  : seg port map( ALUSELECT,  
-                            curr_alu_S);            -- THE ALU SELECT VALUE DISPLAY
+-- THE HIGH NIBBLE DISPLAY
+HDigit: 
+    seg port map(
+        INumber => haddr, 
+        ODisp => curr_add_H
+     );
+     
+-- THE LOW NIBBLE DISPLAY
+LDigit: 
+    seg port map( 
+        INumber => curr_add(3 downto 0), 
+        ODisp   => curr_add_L
+    );  
+
+-- THE ALU SELECT VALUE DISPLAY     
+ALUSEL: 
+    seg port map( 
+        INumber => ALUSELECT,  
+        ODisp   => curr_alu_S
+    );            
 
 --     M1           M2        M3         ALU 
 -- NOP   000    NOP   000   NOP 0   NOP     0000
@@ -147,10 +163,18 @@ m3_ops:
         d7  => open
     );
     
-    m3_vector <= "00" & m3;
      -- INSTANTIATE THE MICROSEQUENCER
 mseq: 
-    microsequencer port map(clk, z, IR, curr_add, m1, m2, m3, ALUSELECT);
+    microsequencer port map(
+        clk                 => clk, 
+        z                   => z, 
+        instruction         => IR, 
+        current_addr_out    => curr_add, 
+        m1                  => m1, 
+        m2                  => m2, 
+        m3                  => m3, 
+        aluselect           => ALUSELECT
+     );
     
      -- COMMAND SIGNALS AND WHEN THEY ARE ACTIVE
      ARLOAD <= arpc     or ardt;
@@ -176,5 +200,6 @@ mseq:
 
      alu_cmd <= ALUSELECT;
      
-    
+     m3_vector <= "00" & m3;
+
 end architecture;
