@@ -5,13 +5,13 @@ use ieee.numeric_std.all;
 entity three_bit_decoder is
     port(
         a   : in std_logic_vector(2 downto 0);
-    	d0  : out std_logic, 
-        d1  : out std_logic, 
-        d2  : out std_logic, 
-        d3  : out std_logic, 
-        d4  : out std_logic, 
-        d5  : out std_logic, 
-        d6  : out std_logic, 
+    	d0  : out std_logic;
+        d1  : out std_logic; 
+        d2  : out std_logic; 
+        d3  : out std_logic; 
+        d4  : out std_logic; 
+        d5  : out std_logic; 
+        d6  : out std_logic; 
         d7  : out std_logic
     );
 end entity three_bit_decoder;
@@ -33,7 +33,7 @@ begin
     
 	process(a)
     begin
-    	case input is
+    	case a is
         	when "000" => d_i <= (0 => '1' , others => '0');
             when "001" => d_i <= (1 => '1' , others => '0');
             when "010" => d_i <= (2 => '1' , others => '0');
