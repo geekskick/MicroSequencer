@@ -5,7 +5,7 @@ use ieee.numeric_std.all;
 entity top_model_cu is
     port( 
         -- INPUTS
-        z,        : in std_logic;
+        z        : in std_logic;
         clk       : in std_logic;
         IR        : in std_logic_vector(4 downto 0);    -- INSTRUCTION REGISTER LOW NIBBLE + 1
        
@@ -24,6 +24,7 @@ end entity;
 architecture structure of top_model_cu is
 
     -- MICRO OPERATIONS FIELDS
+    signal m3_vector    : std_logic_vector(2 downto 0);
     signal m3           : std_logic;
     signal m1           : std_logic_vector(2 downto 0);
     signal m2           : std_logic_vector(2 downto 0);
@@ -57,13 +58,13 @@ architecture structure of top_model_cu is
     component three_bit_decoder is
     port(
         a   : in std_logic_vector(2 downto 0);
-        d0  : out std_logic, 
-        d1  : out std_logic, 
-        d2  : out std_logic, 
-        d3  : out std_logic, 
-        d4  : out std_logic, 
-        d5  : out std_logic, 
-        d6  : out std_logic, 
+        d0  : out std_logic;
+        d1  : out std_logic; 
+        d2  : out std_logic; 
+        d3  : out std_logic; 
+        d4  : out std_logic; 
+        d5  : out std_logic; 
+        d6  : out std_logic; 
         d7  : out std_logic
     );
     end component three_bit_decoder;
@@ -135,7 +136,7 @@ m2_ops:
 
 m3_ops: 
     three_bit_decoder port map(
-        a   => "00" & m3, 
+        a   => m3_vector, 
         d0  => nop3, 
         d1  => drm, 
         d2  => open, 
@@ -146,8 +147,10 @@ m3_ops:
         d7  => open
     );
     
+    m3_vector <= "00" & m3;
      -- INSTANTIATE THE MICROSEQUENCER
-    mseq    : microsequencer port map(clk, z, IR, curr_add, m1, m2, m3, ALUSELECT);
+mseq: 
+    microsequencer port map(clk, z, IR, curr_add, m1, m2, m3, ALUSELECT);
     
      -- COMMAND SIGNALS AND WHEN THEY ARE ACTIVE
      ARLOAD <= arpc     or ardt;

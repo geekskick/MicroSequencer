@@ -1,5 +1,5 @@
-package contsants is
+package constants is
 
     constant DB_WIDTH: integer := 16;
 
-end package contsants ;
+end package constants;
