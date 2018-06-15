@@ -7,7 +7,9 @@ end buffer_testbench;
 
 architecture Behavioral of buffer_testbench is
     component tristate_buffer is
-    generic(data_width: natural);
+    generic(
+        data_width: natural
+    );
     port(
         a    : in std_logic_vector(data_width-1 downto 0);
         q    : out std_logic_vector(data_width-1 downto 0);
@@ -31,7 +33,7 @@ uut_16: tristate_buffer
     )
     port map(
         a   => inp, 
-        o   => outp, 
+        q   => outp, 
         en  => en
     );
 

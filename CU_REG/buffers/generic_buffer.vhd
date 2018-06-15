@@ -13,7 +13,7 @@ entity tristate_buffer is
 
 end entity tristate_buffer;
 
-architecture behav of buff is
+architecture behav of tristate_buffer is
 
 begin
     q <= a when (en = '1') else (others => 'Z');
