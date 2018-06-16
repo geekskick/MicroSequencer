@@ -51,8 +51,6 @@ architecture structure of top_model_cu is
     -- CURRENT ADDRESS OF THE MICROCODE
     signal curr_add     : std_logic_vector(5 downto 0);
      
-    -- HIGH NIBBLE OF THE MICROCODE ADDRESS
-    signal haddr        : std_logic_vector(3 downto 0);
 
     -- MICROOPERATIONS
     signal nop1, nop2, nop3, arin, ardt, arpc, acin, aczo, acr, acdr, minu, plus, aand, oor, xxor, nnot, trdr, pcin, pcdt, irdr, rac, mdr, drac, zalu, drm, lshift, rshift  : std_logic := '0';
@@ -85,11 +83,7 @@ architecture structure of top_model_cu is
     );
     end component three_bit_decoder;
      
-begin
-
-    -- DEBUGGING COMMANDS
-    haddr <= "00" & curr_add(5 downto 4) ;          -- THE HIGH NIBBLE OF THE CURRENT ADDRESS NEEDS TO BE MAPPED TO GO FROM 2 BITS TO 4           
-    
+begin    
     -- DECODER INSTANTIATION, WHERE EACH MICROCODE FIELD (M1, M2, M3) GETS IT'S OWN DECODER
 m1_ops: 
     three_bit_decoder port map(

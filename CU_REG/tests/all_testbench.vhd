@@ -27,6 +27,9 @@ architecture Behavioral of all_testbench is
     component register_testbench is
     end component;
     
+    component testbench is
+    end component;
+    
 begin
 
 alu_tb_inst:

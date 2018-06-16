@@ -1,6 +1,8 @@
 library IEEE;
+library xil_defaultlib;
 use IEEE.std_logic_1164.all;
 use ieee.numeric_std.all;
+use xil_defaultlib.constants.all;
 
 entity microsequencer is
     port(
@@ -11,7 +13,7 @@ entity microsequencer is
         m1                 : out std_logic_vector(2 downto 0);
         m2                 : out std_logic_vector(2 downto 0);
         m3                 : out std_logic;
-        aluselect          : out std_logic_vector(3 downto 0)
+        aluselect          : out std_logic_vector(ALU_CMD_WIDTH-1 downto 0)
     );
 end entity microsequencer;
 
