@@ -1,5 +1,6 @@
 library IEEE;
 use IEEE.std_logic_1164.all;
+use ieee.numeric_std.all;
 
 entity generic_register is
     generic(
@@ -25,7 +26,7 @@ begin
             if load = '1' then
                 q_i <= data;
             elsif inc = '1' then
-                q_i <= std_logic_vector(to_integer(q_i) + 1);
+                q_i <= std_logic_vector(unsigned(q_i) + 1);
             end if;
         end if;
     end process;
