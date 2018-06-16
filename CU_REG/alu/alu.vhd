@@ -1,13 +1,14 @@
 library ieee;
+library xil_defaultlib;
 use ieee.std_logic_1164.all; 
 use ieee.numeric_std.all;
-use work.constants.all;
+use xil_defaultlib.constants.all;
  
 entity ALU is
     port(
-        op1      : in signed(7 downto 0);           -- Input operands
-        op2      : in signed(7 downto 0);           -- Input operands
-        command  : in unsigned(3 downto 0);         -- Operation to be performed
+        op1      : in signed((DB_WIDTH/2)-1 downto 0);           -- Input operands
+        op2      : in signed((DB_WIDTH/2)-1 downto 0);           -- Input operands
+        command  : in std_logic_vector(ALU_CMD_WIDTH-1 downto 0);         -- Operation to be performed
         q        : out std_logic_vector((DB_WIDTH/2)-1 downto 0) -- Output of ALU
     );
 end entity ALU;
@@ -20,7 +21,7 @@ begin
     process(command, op2, op1) 
     begin
         q_i <= (others => '0'); 
-        case Logic is
+        case command is
             when "0000" => NULL;
             when "0001" => q_i <= op1 + op2;   -- ADD1
             when "0010" => q_i <= op1 - op2;   -- SUB1
@@ -40,4 +41,4 @@ begin
  
     q <= std_logic_vector(q_i);
 
-end architecture Behavior;
+end architecture behave;

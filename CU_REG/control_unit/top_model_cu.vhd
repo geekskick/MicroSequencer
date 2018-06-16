@@ -1,6 +1,8 @@
 library IEEE;
+library xil_defaultlib;
 use IEEE.std_logic_1164.all;
 use ieee.numeric_std.all;
+use xil_defaultlib.constants.all;
 
 entity top_model_cu is
     port( 
@@ -29,7 +31,7 @@ entity top_model_cu is
         acload  : out std_logic;
         acbus   : out std_logic;
         zload   : out std_logic;
-        alu_cmd : out std_logic_vector(3 downto 0)     -- to the alu input
+        alu_cmd : out std_logic_vector(ALU_CMD_WIDTH-1 downto 0)     -- to the alu input
     );
 end entity;
 
@@ -44,7 +46,7 @@ architecture structure of top_model_cu is
     signal m2           : std_logic_vector(2 downto 0);
 
     -- COMMAND TO SEND TO THE ALU
-    SIGNAL ALUSELECT    : std_logic_vector(3 downto 0);
+    SIGNAL ALUSELECT    : std_logic_vector(ALU_CMD_WIDTH-1 downto 0);
      
     -- CURRENT ADDRESS OF THE MICROCODE
     signal curr_add     : std_logic_vector(5 downto 0);
@@ -65,7 +67,7 @@ architecture structure of top_model_cu is
         m1                 : out std_logic_vector(2 downto 0);
         m2                 : out std_logic_vector(2 downto 0);
         m3                 : out std_logic;
-        aluselect          : out std_logic_vector(3 downto 0)
+        aluselect          : out std_logic_vector(ALU_CMD_WIDTH-1 downto 0)
     );
     end component microsequencer;
    
