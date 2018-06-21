@@ -13,3 +13,4 @@ See the [microcode](CU_REG/control_unit/microcode.vhd).
 - [ ] Separate the address and data busses.
 - [ ] Test ALU
 - [ ] Document to help people learn from this!
+- [ ] Implement this on a physical device
