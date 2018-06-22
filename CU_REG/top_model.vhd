@@ -57,10 +57,10 @@ architecture struct of top_model is
     
     component ALU is
         port(
-            op1     : in  signed(7 downto 0); 
-            op2     : in  signed(7 downto 0); 
-            command : in  unsigned(ALU_CMD_WIDTH-1 downto 0); 
-            q       : out std_logic_vector(7 downto 0)
+            operand1 : in  signed(7 downto 0); 
+            operand2 : in  signed(7 downto 0); 
+            cmd      : in  unsigned(ALU_CMD_WIDTH-1 downto 0); 
+            q        : out std_logic_vector(7 downto 0)
         );
     end component ALU;
     
@@ -149,7 +149,7 @@ architecture struct of top_model is
     -- From the cu to the alu
     signal sig_alu_cmd : std_logic_vector(ALU_CMD_WIDTH-1 downto 0);
     
-    -- command signals from cu to other places
+    -- cmd signals from cu to other places
     signal error  : std_logic;
     signal arload : std_logic;
     signal arinc  : std_logic;
@@ -347,10 +347,10 @@ begin
 
 -- ALU
     alu_inst : alu port map(
-        op1     => signed(acbridge), 
-        op2     => signed(databus(REG_WIDTH-1 downto 0)), 
-        command => unsigned(sig_alu_cmd), 
-        q       => alubridge
+        operand1 => signed(acbridge), 
+        operand2 => signed(databus(REG_WIDTH-1 downto 0)), 
+        cmd      => unsigned(sig_alu_cmd), 
+        q        => alubridge
     );
 
 -- Z Register
@@ -384,19 +384,19 @@ begin
         inc  => '0', 
         q    => ir
     );
-    
-    -- memory
-    -- ram_inst: small_memory port map(arbridge(6 downto 0), sig_mem_to_bus, sig_bus_to_mem,rd, wr);
-    
-    -- Tri states                              width               in                      out                         enable
-    -------------------------------------------------------------------------------------------------------------------------------
-        membusbuf_inst : tristate_buffer generic map(REG_WIDTH) port map(sig_mem_to_bus, mem_buff_db, membus);
-        busmembuf_inst : tristate_buffer generic map(REG_WIDTH) port map(databus(REG_WIDTH-1 downto 0), sig_bus_to_mem, busmem);
-        acbuff_inst    : tristate_buffer generic map(REG_WIDTH) port map(acbridge, ac_buff_db, acbus);
-        rbuff_inst     : tristate_buffer generic map(REG_WIDTH) port map(rbridge, r_buff_db, rbus);
-        pcbuf_inst     : tristate_buffer generic map(DB_WIDTH) port map(pcbridge, pc_buff_db, pcbus);
-        drhbuf_inst    : tristate_buffer generic map(REG_WIDTH) port map(drbridge, drh_buff_db, drhbus);
-        drlbuf_inst    : tristate_buffer generic map(REG_WIDTH) port map(drbridge, drl_buff_db, drlbus);
-        trbuf_inst     : tristate_buffer generic map(REG_WIDTH) port map(trbridge, tr_buff_db, trbus);
+
+-- memory
+-- ram_inst: small_memory port map(arbridge(6 downto 0), sig_mem_to_bus, sig_bus_to_mem,rd, wr);
+
+-- Tri states                              width               in                      out                         enable
+-------------------------------------------------------------------------------------------------------------------------------
+    membusbuf_inst : tristate_buffer generic map(REG_WIDTH) port map(sig_mem_to_bus, mem_buff_db, membus);
+    busmembuf_inst : tristate_buffer generic map(REG_WIDTH) port map(databus(REG_WIDTH-1 downto 0), sig_bus_to_mem, busmem);
+    acbuff_inst    : tristate_buffer generic map(REG_WIDTH) port map(acbridge, ac_buff_db, acbus);
+    rbuff_inst     : tristate_buffer generic map(REG_WIDTH) port map(rbridge, r_buff_db, rbus);
+    pcbuf_inst     : tristate_buffer generic map(DB_WIDTH) port map(pcbridge, pc_buff_db, pcbus);
+    drhbuf_inst    : tristate_buffer generic map(REG_WIDTH) port map(drbridge, drh_buff_db, drhbus);
+    drlbuf_inst    : tristate_buffer generic map(REG_WIDTH) port map(drbridge, drl_buff_db, drlbus);
+    trbuf_inst     : tristate_buffer generic map(REG_WIDTH) port map(trbridge, tr_buff_db, trbus);
     
 end architecture struct;

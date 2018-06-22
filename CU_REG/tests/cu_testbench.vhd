@@ -264,7 +264,7 @@ begin
         report "MVAC1";
         assert RLOAD = '1' report "RLOAD";
         assert ACBUS = '1' report "ACBUS";
-        assert alu = "0000" report "ALU commands";
+        assert alu = "0000" report "ALU cmds";
         
         ir <= "00100"; --MOVR
         wait for period;
@@ -282,7 +282,7 @@ begin
         report "MOVR1";
         assert RBUS = '1' report "RBUS";
         assert ACLOAD = '1' report "ACLOAD";
-        assert alu = "0000" or alu = "1001" or alu = "1001" report "ALU commands : " & to_hstring(alu);
+        assert alu = "0000" or alu = "1001" or alu = "1001" report "ALU cmds : " & to_hstring(alu);
         
         wait for period;
         ir <= "00101"; -- JMP1

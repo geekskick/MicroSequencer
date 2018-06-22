@@ -36,35 +36,57 @@ end entity;
 
 architecture structure of top_model_cu is
     
-    -- MICRO OPERATIONS FIELDS
-    -- As the decoder is now always 3 bit, the m3 signal needs to be converted to 
-    -- a vector.
+    
     signal m3_vector : std_logic_vector(2 downto 0);
     signal m3        : std_logic;
     signal m1        : std_logic_vector(2 downto 0);
     signal m2        : std_logic_vector(2 downto 0);
     
-    -- COMMAND TO SEND TO THE ALU
-    SIGNAL ALUSELECT : std_logic_vector(ALU_CMD_WIDTH-1 downto 0);
+    SIGNAL alu_cmd_i : std_logic_vector(ALU_CMD_WIDTH-1 downto 0);
     
-    -- CURRENT ADDRESS OF THE MICROCODE
-    signal curr_add : std_logic_vector(5 downto 0);
+    signal current_addr : std_logic_vector(5 downto 0);
     
     
-    -- MICROOPERATIONS
-    signal nop1, nop2, nop3, arin, ardt, arpc, acin, aczo, acr, acdr, minu, plus, aand, oor, xxor, nnot, trdr, pcin, pcdt, irdr, rac, mdr, drac, zalu, drm, lshift, rshift : std_logic := '0';
+    signal nop1   : std_logic := '0';
+    signal nop2   : std_logic := '0';
+    signal nop3   : std_logic := '0';
+    signal arin   : std_logic := '0';
+    signal ardt   : std_logic := '0';
+    signal arpc   : std_logic := '0';
+    signal acin   : std_logic := '0';
+    signal aczo   : std_logic := '0';
+    signal acr    : std_logic := '0';
+    signal acdr   : std_logic := '0';
+    signal minu   : std_logic := '0';
+    signal plus   : std_logic := '0';
+    signal aand   : std_logic := '0';
+    signal oor    : std_logic := '0';
+    signal xxor   : std_logic := '0';
+    signal nnot   : std_logic := '0';
+    signal trdr   : std_logic := '0';
+    signal pcin   : std_logic := '0';
+    signal pcdt   : std_logic := '0';
+    signal irdr   : std_logic := '0';
+    signal rac    : std_logic := '0';
+    signal mdr    : std_logic := '0';
+    signal drac   : std_logic := '0';
+    signal zalu   : std_logic := '0';
+    signal drm    : std_logic := '0';
+    signal lshift : std_logic := '0';
+    signal rshift : std_logic := '0';
     
     
     -- COMPONENT DECLARATIONS FOLLOW
     component microsequencer is
         port(
-            clk, z           : in  std_logic;
+            clk              : in  std_logic;
+            z                : in  std_logic;
             instruction      : in  std_logic_vector(4 downto 0);
             current_addr_out : out std_logic_vector(5 downto 0);
             m1               : out std_logic_vector(2 downto 0);
             m2               : out std_logic_vector(2 downto 0);
             m3               : out std_logic;
-            aluselect        : out std_logic_vector(ALU_CMD_WIDTH-1 downto 0)
+            alu_cmd          : out std_logic_vector(ALU_CMD_WIDTH-1 downto 0)
         );
     end component microsequencer;
     
@@ -123,14 +145,14 @@ begin
         clk              => clk, 
         z                => z, 
         instruction      => IR, 
-        current_addr_out => curr_add, 
+        current_addr_out => current_addr, 
         m1               => m1, 
         m2               => m2, 
         m3               => m3, 
-        aluselect        => ALUSELECT
+        alu_cmd_i        => alu_cmd_i
     );
     
-    -- COMMAND SIGNALS AND WHEN THEY ARE ACTIVE
+    -- cmd SIGNALS AND WHEN THEY ARE ACTIVE
     arload  <= arpc or ardt;
     arinc   <= arin;
     rd      <= drm;
@@ -147,11 +169,11 @@ begin
     trbus   <= ardt or pcdt;
     irload  <= irdr;
     rload   <= rac;
-    rbus    <= '1' when(aluselect = "0001" or aluselect = "0010" or aluselect = "0101" or aluselect = "0110" or aluselect = "1000" or acr = '1') else '0';
-    acload  <= '1' when (to_integer(unsigned(aluselect)) > 0) else '0';
+    rbus    <= '1' when(alu_cmd_i = "0001" or alu_cmd_i = "0010" or alu_cmd_i = "0101" or alu_cmd_i = "0110" or alu_cmd_i = "1000" or acr = '1') else '0';
+    acload  <= '1' when (to_integer(unsigned(alu_cmd_i)) > 0) else '0';
     acbus   <= drac or rac;
     zload   <= zalu;
-    alu_cmd <= aluselect;
+    alu_cmd <= alu_cmd_i;
     
     m3_vector <= "00" & m3;
     

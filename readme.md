@@ -13,3 +13,4 @@ See the [microcode](CU_REG/control_unit/microcode.vhd).
 - [X] Test ALU
 - [ ] Test Top Model
 - [ ] Document to help people learn from this!
+- [ ] ALU instructions and cmds have lots of repeats. Remove them and ensure cu uses the correct ones.
