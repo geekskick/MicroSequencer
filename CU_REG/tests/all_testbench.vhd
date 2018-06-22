@@ -8,13 +8,13 @@ entity all_testbench is
 end all_testbench;
 
 architecture Behavioral of all_testbench is
-
+    
     component alu_testbench is
     end component;
     
     component buffer_testbench is
     end component;
-
+    
     component cu_testbench is 
     end component;
     
@@ -31,18 +31,12 @@ architecture Behavioral of all_testbench is
     end component;
     
 begin
-
-alu_tb_inst:
-    alu_testbench;
-buff_tb_inst:
-    buffer_testbench;
-cu_tb_inst:
-    cu_testbench;
-nor_tb_inst:
-    nor_testbench;
-dec_tb_inst:
-    decoder_testbench;
-reg_tb_inst:
-    register_testbench;
+    
+    alu_tb_inst  : alu_testbench;
+    buff_tb_inst : buffer_testbench;
+    cu_tb_inst   : cu_testbench;
+    nor_tb_inst  : nor_testbench;
+    dec_tb_inst  : decoder_testbench;
+    reg_tb_inst  : register_testbench;
     
 end Behavioral;

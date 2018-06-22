@@ -3,63 +3,63 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 entity small_memory is
-  port( 
-    adr : in  std_logic_vector(6 downto 0); -- address to use
-    o0  : out std_logic_vector(7 downto 0); -- output data
-    i0  : in std_logic_vector(7 downto 0);  --input data
-    r, w: in std_logic := '0'               -- read or write
-  );
-
+    port( 
+        adr  : in  std_logic_vector(6 downto 0); -- address to use
+        o0   : out std_logic_vector(7 downto 0); -- output data
+        i0   : in  std_logic_vector(7 downto 0); --input data
+        r, w : in  std_logic := '0' -- read or write
+    );
+    
 end small_memory;
 
 architecture rtl of small_memory is
-
+    
     -- 64 bytes of program code and 64 of ram
     subtype my_word is std_logic_vector(7 downto 0); 
     type mem is array (0 to 63) of my_word; 
     
-    signal ram: mem;
+    signal ram : mem;
     
-    signal addreg: integer range 0 to 128;
+    signal addreg : integer range 0 to 128;
     
     constant rom : mem := ( -- program code
-                            "00001011", -- bit 6 set means its ram, dont care about second byte as it's not used
-                            "00000010","01000001","00000000",
-                            "00000010","01000010","00000000",
-                            "00000001","01000010","00000001",
-                            "00001010",
-                            "00000010","01000010","00000001",
-                            "00000011",
-                            "00000001","01000001","00000001",
-                            "00001000",
-                            "00000010","01000001","00000001",
-                            "00000001","00011110","00000000",
-                            "00001001",
-                            "00000111","00000111","00000000",
-                            "00000000",
-                            "00000101",
-                            "00000000","00000000",
-                            "00000000","00000000","00000000","00000000",
-                            "00000000","00000000","00000000","00000000",
-                            "00000000","00000000","00000000","00000000",
-                            "00000000","00000000","00000000","00000000",
-                            "00000000","00000000","00000000","00000000",
-                            "00000000","00000000","00000000","00000000",
-                            "00000000","00000000","00000000","00000000",
-                            "00000000","00000000","00000000"
-                        );
-
-
+            "00001011", -- bit 6 set means its ram, dont care about second byte as it's not used
+            "00000010","01000001","00000000",
+            "00000010","01000010","00000000",
+            "00000001","01000010","00000001",
+            "00001010",
+            "00000010","01000010","00000001",
+            "00000011",
+            "00000001","01000001","00000001",
+            "00001000",
+            "00000010","01000001","00000001",
+            "00000001","00011110","00000000",
+            "00001001",
+            "00000111","00000111","00000000",
+            "00000000",
+            "00000101",
+            "00000000","00000000",
+            "00000000","00000000","00000000","00000000",
+            "00000000","00000000","00000000","00000000",
+            "00000000","00000000","00000000","00000000",
+            "00000000","00000000","00000000","00000000",
+            "00000000","00000000","00000000","00000000",
+            "00000000","00000000","00000000","00000000",
+            "00000000","00000000","00000000","00000000",
+            "00000000","00000000","00000000"
+        );
+    
+    
 begin
-
+    
     -- Register the address for reading or writing
     addreg <= to_integer(unsigned(adr));
     
     -- when the address is less than 64 it's the rom, else it's the ram 
-    o0 <=   rom(addreg)     when (r = '1' and addreg < 64)  else 
-            ram(addreg-64)  when (r = '1' and addreg >= 64) else        
-            (others => 'Z'); -- shouldn't happen
-                
+    o0 <= rom(addreg) when (r = '1' and addreg < 64) else 
+        ram(addreg-64) when (r = '1' and addreg >= 64) else 
+        (others => 'Z'); -- shouldn't happen
+    
     -- put the data to the ram
     process(addreg, w, r, i0)
     begin
@@ -67,7 +67,7 @@ begin
             ram(addreg - 64) <= i0;
         end if;
     end process;
-
+    
 end rtl;
 
 
