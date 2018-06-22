@@ -7,7 +7,7 @@ The intention of the repository is to provide an example implementation, and eve
 See the [microcode](CU_REG/control_unit/microcode.vhd).
 
 ## TODO
-- [X] Refactor to suit a naming convention (any as long as its consistant.
+- [X] Refactor to suit a naming convention (any as long as its consistant).
 - [X] Make register a generic entity the same way as the buffer.
 - [ ] Separate the address and data busses.
 - [ ] Test ALU

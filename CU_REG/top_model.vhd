@@ -18,8 +18,32 @@ port(
     tb_ar  : out std_logic_vector(7 downto 0);
     tb_pc  : out std_logic_vector(15 downto 0);
     tb_db  : out std_logic_vector(15 downto 0);
+
+    -- CU control signals
+    tb_error   : out std_logic;
+    tb_arload  : out std_logic;
+    tb_arinc   : out std_logic;
+    tb_rd      : out std_logic;
+    tb_wr      : out std_logic; 
+    tb_membus  : out std_logic;
+    tb_busmem  : out std_logic;
+    tb_pcinc   : out std_logic;
+    tb_pcload  : out std_logic;
+    tb_pcbus   : out std_logic;
+    tb_drlbus  : out std_logic;
+    tb_drhbus  : out std_logic;
+    tb_drload  : out std_logic;
+    tb_trload  : out std_logic; 
+    tb_trbus   : out std_logic;
+    tb_irload  : out std_logic;
+    tb_rload   : out std_logic; 
+    tb_rbus    : out std_logic;
+    tb_acload  : out std_logic;
+    tb_acbus   : out std_logic;
+    tb_zload   : out std_logic;
+    tb_alu_cmd : out std_logic_vector(ALU_CMD_WIDTH-1 downto 0)  
     
-    -- mmory interface
+    -- Memory interface
     mem_wr  : out std_logic;
     mem_rd  : out std_logic;
     mem_addr : out std_logic_vector(6 downto 0); 
@@ -35,21 +59,38 @@ architecture struct of top_model is
      port(
         op1     : in signed(7 downto 0); 
         op2     : in signed(7 downto 0); 
-        command : in unsigned(3 downto 0); 
+        command : in unsigned(ALU_CMD_WIDTH-1 downto 0); 
         q       : out std_logic_vector(7 downto 0)
      );
     end component ALU;
 
     component top_model_cu is
     port( 
-        -- INPUTS
-        z, clk      : in std_logic;
-        IR          : in std_logic_vector(4 downto 0); -- INSTRUCTION REGISTER LOW NIBBLE + 1
-       
-        -- COMMAND SIGNALS
-        error, arload, arinc, rd, wr, membus, busmem, pcinc, pcload, pcbus, drlbus, drhbus, drload, trload, trbus, irload, rload, rbus, acload, acbus, zload    : out std_logic;
-
-        alu_cmd : out std_logic_vector(3 downto 0)
+        z       : in std_logic;
+        clk     : in std_logic;
+        ir      : in std_logic_vector(4 downto 0);    -- instruction register low nibble + 1
+        error   : out std_logic;
+        arload  : out std_logic;
+        arinc   : out std_logic;
+        rd      : out std_logic;
+        wr      : out std_logic; 
+        membus  : out std_logic;
+        busmem  : out std_logic;
+        pcinc   : out std_logic;
+        pcload  : out std_logic;
+        pcbus   : out std_logic;
+        drlbus  : out std_logic;
+        drhbus  : out std_logic;
+        drload  : out std_logic;
+        trload  : out std_logic; 
+        trbus   : out std_logic;
+        irload  : out std_logic;
+        rload   : out std_logic; 
+        rbus    : out std_logic;
+        acload  : out std_logic;
+        acbus   : out std_logic;
+        zload   : out std_logic;
+        alu_cmd : out std_logic_vector(ALU_CMD_WIDTH-1 downto 0)     -- to the alu input
     );
     end component;
     
@@ -106,7 +147,7 @@ architecture struct of top_model is
     signal sig_bus_to_mem : std_logic_vector(REG_WIDTH-1 downto 0);
     
     -- From the cu to the alu
-    signal sig_alu_cmd    : std_logic_vector(3 downto 0);
+    signal sig_alu_cmd    : std_logic_vector(ALU_CMD_WIDTH-1 downto 0);
     
     -- command signals from cu to other places
     signal error    : std_logic;
@@ -162,6 +203,29 @@ begin
     tb_db   <= databus;
     tb_ac   <= ac_buff_db;
     tb_tr   <= tr_buff_db;
+
+    tb_error  <= error; 
+    tb_arload <= arload;
+    tb_arinc  <= arinc; 
+    tb_rd     <= rd;    
+    tb_wr     <= wr;  
+    tb_membus <= membus;
+    tb_busmem <= busmem;
+    tb_pcinc  <= pcinc;
+    tb_pcload <= pcload;
+    tb_pcbus  <= pcbus;
+    tb_drlbus <= drlbus;
+    tb_drhbus <= drhbus;
+    tb_drload <= drload;
+    tb_trload <= trload;
+    tb_trbus  <= trbus;
+    tb_irload <= irload; 
+    tb_rload  <= rload;
+    tb_rbus   <= rbus; 
+    tb_acload <= acload;
+    tb_acbus  <= acbus;
+    tb_zload  <= zload; 
+    tb_alu_cmd<= alu_cmd;
     
     -- Connect the memory to the outside world
     mem_wr  <= wr;

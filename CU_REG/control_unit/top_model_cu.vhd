@@ -6,7 +6,6 @@ use xil_defaultlib.constants.all;
 
 entity top_model_cu is
     port( 
-        -- inputs
         z       : in std_logic;
         clk     : in std_logic;
         ir      : in std_logic_vector(4 downto 0);    -- instruction register low nibble + 1
