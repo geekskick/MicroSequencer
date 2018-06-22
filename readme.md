@@ -10,5 +10,6 @@ See the [microcode](CU_REG/control_unit/microcode.vhd).
 - [X] Refactor to suit a naming convention (any as long as its consistant).
 - [X] Make register a generic entity the same way as the buffer.
 - [ ] Separate the address and data busses.
-- [ ] Test ALU
+- [X] Test ALU
+- [ ] Test Top Model
 - [ ] Document to help people learn from this!
