@@ -14,3 +14,4 @@ See the [microcode](CU_REG/control_unit/microcode.vhd).
 - [ ] Implement this on a physical device
 - [ ] Test Top Model
 - [ ] ALU commands are repeatative - make them specific to operator rather than CU states.
+
