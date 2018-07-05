@@ -104,3 +104,6 @@ Finally when all the testing is done the `stop` signal needs to be set to make s
 ## Gotchas
 
 All of my testbenches use VHDL 2008 so that I can use the `integer'image(i) & " : " & std_logic'image(q)` functionality to convert the signals to strings to print them off. So in your tool make sure that you set the test bench file proporties to _VHDL 2008_ instead of just _VHDL_.
+
+## Resources
+There are loads of tutorials out there and many look [quite scary](https://moodle.epfl.ch/pluginfile.php/1833321/mod_resource/content/1/vhdl_testbench_tutorial.pdf)! I thought [this was a good one](http://vhdlguru.blogspot.com/2010/03/how-to-write-testbench.html)
