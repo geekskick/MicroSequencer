@@ -1,6 +1,6 @@
-library IEEE;
+library ieee;
 library xil_defaultlib;
-use IEEE.std_logic_1164.all;
+use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use xil_defaultlib.constants.all;
 

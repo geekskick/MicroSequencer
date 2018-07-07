@@ -8,7 +8,7 @@ entity ALU is
     port(
         operand1 : in  signed((DB_WIDTH/2)-1 downto 0); 
         operand2 : in  signed((DB_WIDTH/2)-1 downto 0); 
-        cmd  : in  std_logic_vector(ALU_CMD_WIDTH-1 downto 0); -- Operation to be performed
+        cmd      : in  std_logic_vector(ALU_CMD_WIDTH-1 downto 0); -- Operation to be performed
         q        : out std_logic_vector((DB_WIDTH/2)-1 downto 0) -- Output of ALU
     );
 end entity ALU;
