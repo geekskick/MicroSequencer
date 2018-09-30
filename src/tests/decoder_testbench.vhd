@@ -5,8 +5,11 @@ use ieee.numeric_std.all;
 entity decoder_testbench is
 end decoder_testbench;
 
-architecture Behavioral of decoder_testbench is
+architecture behavioural of decoder_testbench is
     
+    -------------------------------------------
+    -- Count the number of bits set in a vector
+    -------------------------------------------
     function bits_set(v : std_logic_vector) return natural is
         variable n : natural := 0;
     begin
@@ -84,4 +87,4 @@ begin
         wait;
     end process;
     
-end Behavioral;
+end behavioural;

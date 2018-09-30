@@ -7,7 +7,7 @@ use xil_defaultlib.constants.all;
 entity all_testbench is
 end all_testbench;
 
-architecture Behavioral of all_testbench is
+architecture structural of all_testbench is
     
     component alu_testbench is
     end component;
@@ -27,7 +27,7 @@ architecture Behavioral of all_testbench is
     component register_testbench is
     end component;
     
-    component testbench is
+    component top_model_testbench is
     end component;
     
 begin
@@ -38,5 +38,6 @@ begin
     nor_tb_inst  : nor_testbench;
     dec_tb_inst  : decoder_testbench;
     reg_tb_inst  : register_testbench;
-    
-end Behavioral;
+    top_tb_inst  : top_model_testbench;    
+
+end structural;

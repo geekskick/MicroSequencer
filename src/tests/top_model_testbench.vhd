@@ -4,11 +4,10 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use xil_defaultlib.constants.all;
 
+entity top_model_testbench is
+end top_model_testbench;
 
-entity testbench is
-end testbench;
-
-architecture Behavioral of testbench is
+architecture behavioural of top_model_testbench is
     
     component top_model is
         port(
@@ -171,4 +170,4 @@ begin
         wait;
     end process;
     
-end Behavioral;
+end behavioural;

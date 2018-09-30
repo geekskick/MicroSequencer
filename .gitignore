@@ -7,3 +7,4 @@ simulation/
 db/
 *.q*
 incremental_db/
+*~

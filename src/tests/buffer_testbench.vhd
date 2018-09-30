@@ -5,7 +5,7 @@ use ieee.numeric_std.all;
 entity buffer_testbench is
 end buffer_testbench;
 
-architecture Behavioral of buffer_testbench is
+architecture behavioural of buffer_testbench is
     component tristate_buffer is
         generic(
             data_width : natural
@@ -76,4 +76,4 @@ begin
         wait;
     end process;
     
-end Behavioral;
+end behavioural;

@@ -5,7 +5,7 @@ use ieee.numeric_std.all;
 entity register_testbench is
 end register_testbench;
 
-architecture Behavioral of register_testbench is
+architecture behavioural of register_testbench is
     component generic_register is
         generic(
             data_width : natural
@@ -83,4 +83,4 @@ begin
         wait;
     end process;
     
-end Behavioral;
+end behavioural;

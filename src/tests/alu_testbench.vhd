@@ -7,13 +7,13 @@ use xil_defaultlib.constants.all;
 entity alu_testbench is
 end alu_testbench;
 
-architecture Behavioral of alu_testbench is
+architecture behavioural of alu_testbench is
     
     component alu is
         port(
-            operand1     : in  signed((DB_WIDTH/2)-1 downto 0); -- Input operands
-            operand2     : in  signed((DB_WIDTH/2)-1 downto 0); -- Input operands
-            cmd : in  std_logic_vector(ALU_CMD_WIDTH-1 downto 0); -- Operation to be performed
+            operand1: in  signed((DB_WIDTH/2)-1 downto 0); -- Input operands
+            operand2: in  signed((DB_WIDTH/2)-1 downto 0); -- Input operands
+            cmd     : in  std_logic_vector(ALU_CMD_WIDTH-1 downto 0); -- Operation to be performed
             q       : out std_logic_vector((DB_WIDTH/2)-1 downto 0) -- Output of ALU
         );
     end component;
@@ -24,16 +24,16 @@ architecture Behavioral of alu_testbench is
     
     signal operand1 : std_logic_vector((DB_WIDTH/2)-1 downto 0);
     signal operand2 : std_logic_vector((DB_WIDTH/2)-1 downto 0);
-    signal q   : std_logic_vector((DB_WIDTH/2)-1 downto 0);
-    signal cmd : std_logic_vector(ALU_CMD_WIDTH-1 downto 0);
+    signal q  	    : std_logic_vector((DB_WIDTH/2)-1 downto 0);
+    signal cmd      : std_logic_vector(ALU_CMD_WIDTH-1 downto 0);
     
     
 begin
     uut : alu port map(
-        operand1     => signed(operand1),
-        operand2     => signed(operand2),
-        cmd => cmd,
-        q       => q
+        operand1 => signed(operand1),
+        operand2 => signed(operand2),
+        cmd      => cmd,
+        q        => q
     );
     
     ------------------------------
@@ -116,4 +116,4 @@ begin
         wait;
     end process;
     
-end Behavioral;
+end behavioural;

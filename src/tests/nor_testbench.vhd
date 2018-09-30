@@ -5,7 +5,7 @@ use ieee.numeric_std.all;
 entity nor_testbench is
 end nor_testbench;
 
-architecture Behavioral of nor_testbench is
+architecture behavioural of nor_testbench is
     
     component nor_vector is
         generic(
@@ -62,4 +62,4 @@ begin
         wait;
     end process;
     
-end Behavioral;
+end behavioural;
