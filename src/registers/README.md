@@ -1,6 +1,6 @@
 # Registers
 
-As part of the CPU a number of register are required:
+As part of the CPU a number of registers are required:
 * PC
 * T
 * R
