@@ -91,6 +91,7 @@ begin
         nz_condition        when "01", 
         dont_care_condition when others;
 
+    -- DECODE THE ALU COMMAND
     with alu_cmd_i select alu_cmd <= 
         alu_add1    when "0001",      
         alu_sub1    when "0010",
