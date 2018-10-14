@@ -34,7 +34,6 @@ architecture behavioural of microsequencer is
     
     signal current_addr: std_logic_vector(MICROCODE_ADDR_WIDTH-1 downto 0) := (0 => '1', others => '0'); -- the selected address
     
-    signal logic_out : std_logic_vector(1 downto 0)  := (others => '0'); -- the control lines to select which address to use
     signal mux_addr  : std_logic_vector(MICROCODE_ADDR_WIDTH-1 downto 0)  := (others => '0'); -- latched address
     signal mem_out   : std_logic_vector(MICROCODE_WIDTH-1 downto 0) := (others => '0'); -- the output of the memory
     
@@ -43,7 +42,15 @@ architecture behavioural of microsequencer is
     
     signal ldsr      : std_logic := '0'; -- load the subroutine register 
     
+    type next_addr_src_t is (incremental_value, microcode_value, ir_value, return_value, error_value);
+    signal logic_out : next_addr_src_t;
     
+    type branch_type_t is (jump_type, call_type, ir_type, return_type, error_type);
+    signal branch_type: branch_type_t;
+
+    type condition_t is (always_condition, z_condition, nz_condition, dont_care_condition, error_condition);
+    signal condition : condition_t;
+
 begin
     
     microcode : rom port map(
@@ -54,18 +61,34 @@ begin
     current_addr_out <= current_addr;
     
     -- LATCH THE SUBROUTINE RETURN ADDRESS WHEN THE BRANCH TYPE IS A CALL
-    ldsr <= '1' when bt = "01" else '0';
+    ldsr <= '1' when branch_type = call_type else '0';
     
     -- TURN THE INSTRUCTION REGISTER INPUT INTO A 6 BIT MICROCODE ADDRESS
     map_out <= (instruction(4) & instruction(3) & instruction(2) &instruction(1) &instruction(0) & "0");
     
+    -- MAKE THE NEXT ADDRESS CORRECT BASED ON THE BRANCH AND CONDITION LOGIC OUTPUT
     with logic_out select mux_addr <= 
-        plus_one        when "00",
-        next_addr       when "10",
-        map_out         when "11",
-        return_add      when "01",
-        (others => '1') when others;
+        plus_one        when incremental_value,
+        next_addr       when microcode_value,
+        map_out         when ir_value,
+        return_add      when return_value,
+        (others => 'X') when error_value;
     
+    -- DECODE THE MICROCODE BRANCHTYPE
+    with bt select branch_type <=
+        jump_type       when "00",
+        call_type       when "01",
+        ir_type         when "10", 
+        return_type     when "11",
+        error_type       when others;
+
+    -- DECODE THE JUMP CONDITIONS
+    with cond select condition <= 
+        always_condition    when "11", 
+        z_condition         when "00", 
+        nz_condition        when "01", 
+        dont_care_condition when others;
+
     -- LATCH THE NEXT ADDRESS INTO THE SUBROUTINE RETURN REGISTER
     process(ldsr)
     begin
@@ -75,38 +98,35 @@ begin
     end process;
     
     -- CHOOSE THE NEXT ADDRESS BASED ON THE BRANCH TYPE, AND CONDITION
-    process(bt, cond, z)
+    process(branch_type, condition, z)
     begin
-        
-        -- logic_out <= "11"; -- default value for logic_out provided so that latches aren't created and muxes used instead
-        
-        case bt is
-                -- JUMP
-            when "00" => 
-                if cond = "11" then
-                    logic_out <= "10";
-                elsif cond = "00" then
+        case branch_type is
+
+            when jump_type => 
+                if condition = always_condition then
+                    logic_out <= microcode_value;
+                elsif condition = z_condition then
                     if z = '1' then
-                        logic_out <= "10"; -- if z is set then use the microcode address
+                        logic_out <= microcode_value; -- if z is set then use the microcode address
                     else
-                        logic_out <= "00"; -- if z is clr then use the next microinstruction
+                        logic_out <= incremental_value; -- if z is clr then use the next microinstruction
                     end if;
-                elsif cond = "01" then
+                elsif condition = nz_condition then
                     if z = '0' then
-                        logic_out <= "10"; -- if z is clr then use the microcode address
+                        logic_out <= microcode_value; -- if z is clr then use the microcode address
                     else
-                        logic_out <= "00"; -- if z is set then use the next microinstruction
+                        logic_out <= incremental_value; -- if z is set then use the next microinstruction
                     end if;
                 else -- in the case of a don't care
-                    logic_out <= "00"; -- doesn't matter shouldn't be executed!
+                    logic_out <= incremental_value; -- doesn't matter shouldn't be executed!
                 end if;
-                -- CALL
-            when "01" => logic_out <= "10"; -- use the microcode address
-                -- MAP
-            when "10" => logic_out <= "11"; -- use the IR value
-                -- RETURN
-            when "11" => logic_out <= "01"; -- use the return address
-            when others => logic_out <= "00";
+                
+            when call_type => logic_out <= microcode_value; -- use the microcode address
+
+            when ir_type => logic_out <= ir_value; -- use the IR value
+
+            when return_type => logic_out <= return_value; -- use the return address
+            when others => logic_out <= incremental_value;
         end case;
     end process;
     
@@ -128,6 +148,5 @@ begin
     m3        <= mem_out(MICROCODE_M3_HIGH-1);
     alu_cmd   <= mem_out(MICROCODE_ALU_HIGH-1 downto MICROCODE_ALU_LOW);
     next_addr <= mem_out(MICROCODE_NEXT_HIGH-1 downto MICROCODE_NEXT_LOW);
-    
-    
+
 end architecture behavioural;
