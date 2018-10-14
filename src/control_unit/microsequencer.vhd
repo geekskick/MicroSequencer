@@ -32,16 +32,16 @@ architecture behavioural of microsequencer is
     signal return_add : std_logic_vector(MICROCODE_ADDR_WIDTH-1 downto 0) := (others => '0'); -- the return from subroutine address
     signal next_addr  : std_logic_vector(MICROCODE_ADDR_WIDTH-1 downto 0) := (others => '0'); -- THE ADDRESS FROM THE MICROCODE
     
-    signal current_addr : std_logic_vector(MICROCODE_ADDR_WIDTH-1 downto 0) := (0 => '1', others => '0'); -- the selected address
+    signal current_addr: std_logic_vector(MICROCODE_ADDR_WIDTH-1 downto 0) := (0 => '1', others => '0'); -- the selected address
     
     signal logic_out : std_logic_vector(1 downto 0)  := (others => '0'); -- the control lines to select which address to use
     signal mux_addr  : std_logic_vector(MICROCODE_ADDR_WIDTH-1 downto 0)  := (others => '0'); -- latched address
     signal mem_out   : std_logic_vector(MICROCODE_WIDTH-1 downto 0) := (others => '0'); -- the output of the memory
     
-    signal cond : std_logic_vector(MICROCODE_COND_LEN-1 downto 0) := (others => '0'); -- the condition from the microcode
-    signal bt   : std_logic_vector(MICROCODE_BT_LEN-1 downto 0) := (others => '0'); -- the branch type from the microcode
+    signal cond      : std_logic_vector(MICROCODE_COND_LEN-1 downto 0) := (others => '0'); -- the condition from the microcode
+    signal bt        : std_logic_vector(MICROCODE_BT_LEN-1 downto 0) := (others => '0'); -- the branch type from the microcode
     
-    signal ldsr : std_logic := '0'; -- load the subroutine register 
+    signal ldsr      : std_logic := '0'; -- load the subroutine register 
     
     
 begin
