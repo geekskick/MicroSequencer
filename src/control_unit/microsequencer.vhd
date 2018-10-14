@@ -4,6 +4,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use xil_defaultlib.cpu_constants.all;
 use xil_defaultlib.control_unit_constants.all;
+use xil_defaultlib.alu_commands.alu_commands_t;
 
 entity microsequencer is
     port(
@@ -14,8 +15,8 @@ entity microsequencer is
         m1               : out std_logic_vector(MICROCODE_M1_LEN-1 downto 0);
         m2               : out std_logic_vector(MICROCODE_M2_LEN-1 downto 0);
         m3               : out std_logic;
-        alu_cmd          : out std_logic_vector(ALU_CMD_WIDTH-1 downto 0)
-    );
+        alu_cmd          : out alu_commands_t
+   );
 end entity microsequencer;
 
 architecture behavioural of microsequencer is
@@ -26,7 +27,8 @@ architecture behavioural of microsequencer is
             data : out std_logic_vector(MICROCODE_WIDTH-1 downto 0)
         );
     end component;
-    
+ 
+    signal alu_cmd_i  : std_logic_vector(ALU_CMD_WIDTH-1 downto 0);    
     signal map_out    : std_logic_vector(MICROCODE_ADDR_WIDTH-1 downto 0) := (others => '0'); -- the IR value as an address
     signal plus_one   : std_logic_vector(MICROCODE_ADDR_WIDTH-1 downto 0) := (others => '0'); -- the next microinstruction
     signal return_add : std_logic_vector(MICROCODE_ADDR_WIDTH-1 downto 0) := (others => '0'); -- the return from subroutine address
@@ -89,6 +91,20 @@ begin
         nz_condition        when "01", 
         dont_care_condition when others;
 
+    with alu_cmd_i select alu_cmd <= 
+        alu_add1    when "0001",      
+        alu_sub1    when "0010",
+        alu_inac1   when "0011",
+        alu_clac1   when "0100",
+        alu_and1    when "0101",
+        alu_or1     when "0110",
+        alu_not1    when "0111",
+        alu_xor1    when "1000",
+        alu_op2_thru when "1001",
+        alu_lshift  when "1011",
+        alu_rshift  when "1100",
+        alu_dont_care when others;
+         
     -- LATCH THE NEXT ADDRESS INTO THE SUBROUTINE RETURN REGISTER
     process(ldsr)
     begin
@@ -146,7 +162,7 @@ begin
     m1        <= mem_out(MICROCODE_M1_HIGH-1 downto MICROCODE_M1_LOW);
     m2        <= mem_out(MICROCODE_M2_HIGH-1 downto MICROCODE_M2_LOW);
     m3        <= mem_out(MICROCODE_M3_HIGH-1);
-    alu_cmd   <= mem_out(MICROCODE_ALU_HIGH-1 downto MICROCODE_ALU_LOW);
+    alu_cmd_i <= mem_out(MICROCODE_ALU_HIGH-1 downto MICROCODE_ALU_LOW);
     next_addr <= mem_out(MICROCODE_NEXT_HIGH-1 downto MICROCODE_NEXT_LOW);
 
 end architecture behavioural;

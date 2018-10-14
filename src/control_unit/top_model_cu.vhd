@@ -4,6 +4,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use xil_defaultlib.cpu_constants.all;
 use xil_defaultlib.control_unit_constants.all;
+use xil_defaultlib.alu_commands.all;
 
 entity top_model_cu is
     port( 
@@ -31,7 +32,7 @@ entity top_model_cu is
         acload  : out std_logic;
         acbus   : out std_logic;
         zload   : out std_logic;
-        alu_cmd : out std_logic_vector(ALU_CMD_WIDTH-1 downto 0) -- to the alu input
+        alu_cmd : out alu_commands_t
     );
 end entity;
 
@@ -42,8 +43,8 @@ architecture structure of top_model_cu is
     signal m1        : std_logic_vector(MICROCODE_M1_LEN-1 downto 0);
     signal m2        : std_logic_vector(MICROCODE_M2_LEN-1 downto 0);
     
-    signal alu_cmd_i : std_logic_vector(ALU_CMD_WIDTH-1 downto 0);
-    
+    signal alu_cmd_i : alu_commands_t;
+
     signal current_addr : std_logic_vector(MICROCODE_ADDR_WIDTH-1 downto 0);
     
     signal nop1   : std_logic := '0';
@@ -85,7 +86,7 @@ architecture structure of top_model_cu is
             m1               : out std_logic_vector(MICROCODE_M1_LEN-1 downto 0);
             m2               : out std_logic_vector(MICROCODE_M2_LEN-1 downto 0);
             m3               : out std_logic;
-            alu_cmd          : out std_logic_vector(ALU_CMD_WIDTH-1 downto 0)
+            alu_cmd          : out alu_commands_t
         );
     end component microsequencer;
     
@@ -169,8 +170,8 @@ begin
     trbus   <= ardt or pcdt;
     irload  <= irdr;
     rload   <= rac;
-    rbus    <= '1' when(alu_cmd_i = "0001" or alu_cmd_i = "0010" or alu_cmd_i = "0101" or alu_cmd_i = "0110" or alu_cmd_i = "1000" or acr = '1') else '0';
-    acload  <= '1' when (to_integer(unsigned(alu_cmd_i)) > 0) else '0';
+    rbus    <= '1' when(alu_cmd_i = alu_add1 or alu_cmd_i = alu_sub1 or alu_cmd_i = alu_and1 or alu_cmd_i = alu_or1 or alu_cmd_i = alu_xor1 or acr = '1') else '0';
+    acload  <= '1' when (alu_cmd_i /= alu_dont_care) else '0';
     acbus   <= drac or rac;
     zload   <= zalu;
     alu_cmd <= alu_cmd_i;

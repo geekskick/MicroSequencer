@@ -4,6 +4,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use xil_defaultlib.cpu_constants.all;
 use xil_defaultlib.control_unit_constants.all;
+use xil_defaultlib.alu_commands.all;
 
 entity cu_testbench is
 end cu_testbench;
@@ -36,7 +37,7 @@ architecture Behavioral of cu_testbench is
             acload  : out std_logic;
             acbus   : out std_logic;
             zload   : out std_logic;
-            alu_cmd : out std_logic_vector(ALU_CMD_WIDTH-1 downto 0) -- to the ALU_CMD inpu
+            alu_cmd : out alu_commands_t
         );
     end component;
     
@@ -69,7 +70,7 @@ architecture Behavioral of cu_testbench is
     signal acload  : std_logic;
     signal acbus   : std_logic;
     signal zload   : std_logic;
-    signal alu_cmd : std_logic_vector(ALU_CMD_WIDTH-1 downto 0);
+    signal alu_cmd : alu_commands_t;
     
     
 begin
@@ -181,6 +182,7 @@ begin
 --report "LDAC5";
         assert ACLOAD = '1' report "ACLOAD" severity failure;
         assert DRLBUS = '1' report "DRLBUS" severity failure;
+        assert alu_cmd = alu_op2_thru report "ALU command" severity failure;
         
         --FETCH1
         ir <= "00000";
@@ -265,7 +267,7 @@ begin
 --report "MVAC1";
         assert RLOAD = '1' report "RLOAD" severity failure;
         assert ACBUS = '1' report "ACBUS" severity failure;
-        assert ALU_CMD = "0000" report "ALU_CMD cmds" severity failure;
+        assert ALU_CMD = alu_dont_care report "ALU_CMD cmds" severity failure;
         
         ir <= "00100"; --MOVR
         wait for period;
@@ -283,7 +285,7 @@ begin
 --report "MOVR1";
         assert RBUS = '1' report "RBUS" severity failure;
         assert ACLOAD = '1' report "ACLOAD" severity failure;
-        assert ALU_CMD = "0000" or ALU_CMD = "1001" or ALU_CMD = "1001" report "ALU_CMD cmds : " & to_hstring(ALU_CMD) severity failure;
+        assert ALU_CMD = alu_op2_thru report "ALU_CMD cmds" severity failure;
         
         wait for period;
         ir <= "00101"; -- JMP1
@@ -452,7 +454,7 @@ begin
 ----report "ADD1";
         assert RBUS = '1' report "RBUS";
         assert ACLOAD = '1' report "ACLOAD";
-        assert ALU_CMD = "0001" report "ALU_CMD : " & to_hstring(ALU_CMD) severity failure;
+        assert ALU_CMD = alu_add1 report "ALU_CMD" severity failure;
         
         ir <= "01001"; --ADD
         wait for period;
@@ -470,7 +472,7 @@ begin
 ----report "SUB1";
         assert RBUS = '1' report "RBUS" severity failure;
         assert ACLOAD = '1' report "ACLOAD" severity failure;
-        assert ALU_CMD = "0010" report "ALU_CMD : " & to_hstring(ALU_CMD) severity failure;
+        assert ALU_CMD = alu_sub1 report "ALU_CMD" severity failure;
         
         ir <= "01010"; --INAC
         wait for period;
@@ -487,7 +489,7 @@ begin
         wait for period;
 ----report "INAC1";
         assert ACLOAD = '1' report "ACLOAD" severity failure;
-        assert ALU_CMD = "0011" report "ALU_CMD : " & to_hstring(ALU_CMD) severity failure;
+        assert ALU_CMD = alu_inac1 report "ALU_CMD" severity failure;
         
         ir <= "01011"; --CLAC
         wait for period;
@@ -504,7 +506,7 @@ begin
         wait for period;
 ----report "CLAC1";
         assert ACLOAD = '1' report "ACLOAD" severity failure;
-        assert ALU_CMD = "0100" report "ALU_CMD : " & to_hstring(ALU_CMD);
+        assert ALU_CMD = alu_clac1 report "ALU_CMD" severity failure;
         
         ir <= "01100"; --AND
         wait for period;
@@ -522,7 +524,7 @@ begin
 ----report "AND1";
         assert RBUS = '1' report "RBUS" severity failure;
         assert ACLOAD = '1' report "ACLOAD" severity failure;
-        assert ALU_CMD = "0101" report "ALU_CMD : " & to_hstring(ALU_CMD) severity failure;
+        assert ALU_CMD = alu_and1 report "ALU_CMD" severity failure;
         
         ir <= "01101"; --OR
         wait for period;
@@ -540,7 +542,7 @@ begin
 ----report "OR1";
         assert RBUS = '1' report "RBUS" severity failure;
         assert ACLOAD = '1' report "ACLOAD" severity failure;
-        assert ALU_CMD = "0110" report "ALU_CMD : " & to_hstring(ALU_CMD) severity failure;
+        assert ALU_CMD = alu_or1 report "ALU_CMD" severity failure;
                 
         ir <= "01110"; -- XOR
         wait for period;
@@ -558,7 +560,7 @@ begin
 ----report "XOR1";
         assert RBUS = '1' report "RBUS" severity failure;
         assert ACLOAD = '1' report "ACLOAD" severity failure;
-        assert ALU_CMD = "1000" report "ALU_CMD : " & to_hstring(ALU_CMD) severity failure;
+        assert ALU_CMD = alu_xor1 report "ALU_CMD"  severity failure;
         
         ir <= "01111"; --NOT
         wait for period;
@@ -575,7 +577,7 @@ begin
         wait for period;
         --report "NOT1";
         assert ACLOAD = '1' report "ACLOAD" severity failure;
-        assert ALU_CMD = "0111" report "ALU_CMD : " & to_hstring(ALU_CMD) severity failure;
+        assert ALU_CMD = alu_not1 report "ALU_CMD" severity failure;
         
         ir <= "10000"; --LSHIFT
         wait for period;
@@ -592,7 +594,7 @@ begin
         wait for period;
         --report "LSHIFT";
         assert ACLOAD = '1' report "ACLOAD" severity failure;
-        assert ALU_CMD = "1011" report "LSHIFT ALU_CMD : " & to_hstring(ALU_CMD) severity failure;
+        assert ALU_CMD = alu_lshift report "LSHIFT ALU_CMD" severity failure;
         
         ir <= "10001"; --RSHIFT
         wait for period;
@@ -609,7 +611,7 @@ begin
         wait for period;
         --report "RSHIFT";
         assert ACLOAD = '1' report "ACLOAD" severity failure;
-        assert ALU_CMD = "1100" report "RSHIFT ALU_CMD : " & to_hstring(ALU_CMD) severity failure;
+        assert ALU_CMD = alu_rshift report "RSHIFT ALU_CMD" severity failure;
         
         wait for period;
         --report "FETCH1";
