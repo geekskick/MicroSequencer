@@ -34,17 +34,6 @@ begin
         q => q
     );
     
-    clk_tick : process
-    begin
-        while stop = false loop
-            clk <= '1';
-            wait for period/2;
-            clk <= '0';
-            wait for period/2;
-        end loop;
-        wait;
-    end process;
-    
     stim : process
     begin
         for i in 0 to width-1 loop

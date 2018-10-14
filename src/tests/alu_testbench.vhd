@@ -2,7 +2,7 @@ library ieee;
 library xil_defaultlib;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-use xil_defaultlib.constants.all;
+use xil_defaultlib.cpu_constants.all;
 
 entity alu_testbench is
 end alu_testbench;
@@ -35,21 +35,7 @@ begin
         cmd      => cmd,
         q        => q
     );
-    
-    ------------------------------
-    -- The Clock of the test bench
-    ------------------------------
-    clk_tick : process
-    begin
-        while stop = false loop
-            clk <= '1';
-            wait for period/2;
-            clk <= '0';
-            wait for period/2;
-        end loop;
-        wait;
-    end process;
-    
+   
     ------------------------------
     -- Stimulating the UUT itself
     ------------------------------

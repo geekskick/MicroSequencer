@@ -94,7 +94,6 @@ architecture behavioural of top_model_testbench is
     signal acload   : std_logic;
     signal acbus    : std_logic;
     signal zload    : std_logic;
-    signal z        : std_logic_vector(0 downto 0);
     signal alu_cmd  : std_logic_vector(ALU_CMD_WIDTH-1 downto 0);
     
 begin

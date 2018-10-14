@@ -2,7 +2,7 @@ library ieee;
 library xil_defaultlib;
 use ieee.std_logic_1164.all; 
 use ieee.numeric_std.all;
-use xil_defaultlib.constants.all;
+use xil_defaultlib.cpu_constants.all;
 
 entity ALU is
     port(

@@ -2,16 +2,17 @@ library ieee;
 library xil_defaultlib;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-use xil_defaultlib.constants.all;
+use xil_defaultlib.cpu_constants.all;
+use xil_defaultlib.control_unit_constants.all;
 
 entity microsequencer is
     port(
         clk              : in  std_logic;
         z                : in  std_logic;
-        instruction      : in  std_logic_vector(4 downto 0);
-        current_addr_out : out std_logic_vector(5 downto 0);
-        m1               : out std_logic_vector(2 downto 0);
-        m2               : out std_logic_vector(2 downto 0);
+        instruction      : in  std_logic_vector(IR_WIDTH-1 downto 0);
+        current_addr_out : out std_logic_vector(MICROCODE_ADDR_WIDTH-1 downto 0);
+        m1               : out std_logic_vector(MICROCODE_M1_LEN-1 downto 0);
+        m2               : out std_logic_vector(MICROCODE_M2_LEN-1 downto 0);
         m3               : out std_logic;
         alu_cmd          : out std_logic_vector(ALU_CMD_WIDTH-1 downto 0)
     );
@@ -21,24 +22,24 @@ architecture behavioural of microsequencer is
     
     component rom is
         port( 
-            addr : in  std_logic_vector(5 downto 0);
-            data : out std_logic_vector(20 downto 0)
+            addr : in  std_logic_vector(MICROCODE_ADDR_WIDTH-1 downto 0);
+            data : out std_logic_vector(MICROCODE_WIDTH-1 downto 0)
         );
     end component;
     
-    signal map_out    : std_logic_vector(5 downto 0) := (others => '0'); -- the IR value as an address
-    signal plus_one   : std_logic_vector(5 downto 0) := (others => '0'); -- the next microinstruction
-    signal return_add : std_logic_vector(5 downto 0) := (others => '0'); -- the return from subroutine address
-    signal next_addr  : std_logic_vector(5 downto 0) := (others => '0'); -- THE ADDRESS FROM THE MICROCODE
+    signal map_out    : std_logic_vector(MICROCODE_ADDR_WIDTH-1 downto 0) := (others => '0'); -- the IR value as an address
+    signal plus_one   : std_logic_vector(MICROCODE_ADDR_WIDTH-1 downto 0) := (others => '0'); -- the next microinstruction
+    signal return_add : std_logic_vector(MICROCODE_ADDR_WIDTH-1 downto 0) := (others => '0'); -- the return from subroutine address
+    signal next_addr  : std_logic_vector(MICROCODE_ADDR_WIDTH-1 downto 0) := (others => '0'); -- THE ADDRESS FROM THE MICROCODE
     
-    signal current_addr : std_logic_vector(5 downto 0) := (0 => '1', others => '0'); -- the selected address
+    signal current_addr : std_logic_vector(MICROCODE_ADDR_WIDTH-1 downto 0) := (0 => '1', others => '0'); -- the selected address
     
     signal logic_out : std_logic_vector(1 downto 0)  := (others => '0'); -- the control lines to select which address to use
-    signal mux_addr  : std_logic_vector(5 downto 0)  := (others => '0'); -- latched address
-    signal mem_out   : std_logic_vector(20 downto 0) := (others => '0'); -- the output of the memory
+    signal mux_addr  : std_logic_vector(MICROCODE_ADDR_WIDTH-1 downto 0)  := (others => '0'); -- latched address
+    signal mem_out   : std_logic_vector(MICROCODE_WIDTH-1 downto 0) := (others => '0'); -- the output of the memory
     
-    signal cond : std_logic_vector(1 downto 0) := (others => '0'); -- the condition from the microcode
-    signal bt   : std_logic_vector(1 downto 0) := (others => '0'); -- the branch type from the microcode
+    signal cond : std_logic_vector(MICROCODE_COND_LEN-1 downto 0) := (others => '0'); -- the condition from the microcode
+    signal bt   : std_logic_vector(MICROCODE_BT_LEN-1 downto 0) := (others => '0'); -- the branch type from the microcode
     
     signal ldsr : std_logic := '0'; -- load the subroutine register 
     
@@ -120,13 +121,13 @@ begin
     plus_one <= std_logic_vector(unsigned(current_addr) + 1);
     
     -- split up the memory output
-    bt        <= mem_out(20 downto 19);
-    cond      <= mem_out(18 downto 17);
-    m1        <= mem_out(16 downto 14);
-    m2        <= mem_out(13 downto 11);
-    m3        <= mem_out(10);
-    alu_cmd   <= mem_out(9 downto 6);
-    next_addr <= mem_out(5 downto 0);
+    bt        <= mem_out(MICROCODE_BT_HIGH-1 downto MICROCODE_BT_LOW);
+    cond      <= mem_out(MICROCODE_COND_HIGH-1 downto MICROCODE_COND_LOW);
+    m1        <= mem_out(MICROCODE_M1_HIGH-1 downto MICROCODE_M1_LOW);
+    m2        <= mem_out(MICROCODE_M2_HIGH-1 downto MICROCODE_M2_LOW);
+    m3        <= mem_out(MICROCODE_M3_HIGH-1);
+    alu_cmd   <= mem_out(MICROCODE_ALU_HIGH-1 downto MICROCODE_ALU_LOW);
+    next_addr <= mem_out(MICROCODE_NEXT_HIGH-1 downto MICROCODE_NEXT_LOW);
     
     
 end architecture behavioural;

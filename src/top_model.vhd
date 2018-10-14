@@ -2,7 +2,7 @@ library ieee;
 library xil_defaultlib;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-use xil_defaultlib.constants.all;
+use xil_defaultlib.cpu_constants.all;
 
 entity top_model is
     port(
@@ -225,7 +225,7 @@ begin
     tb_acload  <= acload;
     tb_acbus   <= acbus;
     tb_zload   <= zload; 
-    tb_alu_cmd <= alu_cmd;
+    tb_alu_cmd <= sig_alu_cmd;
     
     -- Connect the memory to the outside world
     mem_wr         <= wr;
@@ -366,7 +366,7 @@ begin
     );
 
     nor_inst : nor_vector generic map(
-        v_width => DB_WIDTH
+        v_width => REG_WIDTH
     )
     port map(
         d => alubridge,

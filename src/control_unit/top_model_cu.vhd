@@ -2,13 +2,14 @@ library ieee;
 library xil_defaultlib;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-use xil_defaultlib.constants.all;
+use xil_defaultlib.cpu_constants.all;
+use xil_defaultlib.control_unit_constants.all;
 
 entity top_model_cu is
     port( 
         z       : in  std_logic;
         clk     : in  std_logic;
-        ir      : in  std_logic_vector(4 downto 0); -- instruction register low nibble + 1
+        ir      : in  std_logic_vector(IR_WIDTH-1 downto 0); -- instruction register low nibble + 1
         error   : out std_logic;
         arload  : out std_logic;
         arinc   : out std_logic;
@@ -36,16 +37,14 @@ end entity;
 
 architecture structure of top_model_cu is
     
-    
     signal m3_vector : std_logic_vector(2 downto 0);
     signal m3        : std_logic;
-    signal m1        : std_logic_vector(2 downto 0);
-    signal m2        : std_logic_vector(2 downto 0);
+    signal m1        : std_logic_vector(MICROCODE_M1_LEN-1 downto 0);
+    signal m2        : std_logic_vector(MICROCODE_M2_LEN-1 downto 0);
     
-    SIGNAL alu_cmd_i : std_logic_vector(ALU_CMD_WIDTH-1 downto 0);
+    signal alu_cmd_i : std_logic_vector(ALU_CMD_WIDTH-1 downto 0);
     
-    signal current_addr : std_logic_vector(5 downto 0);
-    
+    signal current_addr : std_logic_vector(MICROCODE_ADDR_WIDTH-1 downto 0);
     
     signal nop1   : std_logic := '0';
     signal nop2   : std_logic := '0';
@@ -81,10 +80,10 @@ architecture structure of top_model_cu is
         port(
             clk              : in  std_logic;
             z                : in  std_logic;
-            instruction      : in  std_logic_vector(4 downto 0);
-            current_addr_out : out std_logic_vector(5 downto 0);
-            m1               : out std_logic_vector(2 downto 0);
-            m2               : out std_logic_vector(2 downto 0);
+            instruction      : in  std_logic_vector(IR_WIDTH-1 downto 0);
+            current_addr_out : out std_logic_vector(MICROCODE_ADDR_WIDTH-1 downto 0);
+            m1               : out std_logic_vector(MICROCODE_M1_LEN-1 downto 0);
+            m2               : out std_logic_vector(MICROCODE_M2_LEN-1 downto 0);
             m3               : out std_logic;
             alu_cmd          : out std_logic_vector(ALU_CMD_WIDTH-1 downto 0)
         );
@@ -129,6 +128,7 @@ begin
         d7 => zalu
     );
 
+    m3_vector <= "00" & m3;
     m3_ops : three_bit_decoder port map(
         a  => m3_vector, 
         d0 => nop3, 
@@ -149,7 +149,7 @@ begin
         m1               => m1, 
         m2               => m2, 
         m3               => m3, 
-        alu_cmd_i        => alu_cmd_i
+        alu_cmd          => alu_cmd_i
     );
     
     -- cmd SIGNALS AND WHEN THEY ARE ACTIVE
@@ -174,7 +174,5 @@ begin
     acbus   <= drac or rac;
     zload   <= zalu;
     alu_cmd <= alu_cmd_i;
-    
-    m3_vector <= "00" & m3;
     
 end architecture;

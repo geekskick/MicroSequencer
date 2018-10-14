@@ -35,21 +35,7 @@ begin
         q  => outp, 
         en => en
     );
-    
-    ------------------------------
-    -- The Clock of the test bench
-    ------------------------------
-    clk_tick : process
-    begin
-        while stop = false loop
-            clk <= '1';
-            wait for period/2;
-            clk <= '0';
-            wait for period/2;
-        end loop;
-        wait;
-    end process;
-    
+        
     ------------------------------
     -- Stimulating the UUT itself
     ------------------------------

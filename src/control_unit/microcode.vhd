@@ -1,11 +1,13 @@
 library ieee;
+library xil_defaultlib;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+use xil_defaultlib.control_unit_constants.all;
 
 entity rom is
     port( 
-        addr : in  std_logic_vector(5 downto 0);
-        data : out std_logic_vector(20 downto 0)
+        addr : in  std_logic_vector(MICROCODE_ADDR_WIDTH-1 downto 0);
+        data : out std_logic_vector(MICROCODE_WIDTH-1 downto 0)
     );
 end entity;
 
@@ -41,7 +43,7 @@ architecture struct of rom is
     --                                  LSHIFT  1011
     --                                  RSHIFT  1100                          
     
-    type mem is array (0 to 63) of std_logic_vector(20 downto 0); 
+    type mem is array (0 to 63) of std_logic_vector(MICROCODE_WIDTH-1 downto 0); 
     constant microcode : mem := ( 
             --loc => bt & condition & M1 & M2 & M3 & alu & next address
             0  => "00" & "11" & "000" & "000" & "0" & "0000" & "000001", -- NOP
