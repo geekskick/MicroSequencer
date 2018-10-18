@@ -67,17 +67,17 @@ begin
         
         wait for period;
         
-        assert q /= data report "Outout of register is data without a load : " & to_hstring(q);
+        assert q /= data report "Outout of register is data without a load : " & to_hstring(q) severity failure;
         
         ld <= '1';
         wait for period;
-        assert q = data report "Outout of register isnt data with a load : " & to_hstring(q);
+        assert q = data report "Outout of register isnt data with a load : " & to_hstring(q) severity failure;
+
         ld  <= '0';
         inc <= '1';
         wait for period;
-        assert to_integer(unsigned(q)) = 0 report "Outout of register didn't increment : " & to_hstring(q);
-        
-        
+        assert to_integer(unsigned(q)) = 0 report "Outout of register didn't increment : " & to_hstring(q) severity failure;
+
         stop <= true;
         report "------------DONE-------------";
         wait;

@@ -64,8 +64,8 @@ begin
         for i in 0 to 7 loop
             a <= std_logic_vector(to_unsigned(i, a'length));
             wait for 1ns;
-            assert bits_set(d) = 1 report "1 bit isn't set : " & to_hstring(d);
-            assert d(i) = '1' report "wrong bit set, its not " & integer'image(i);
+            assert bits_set(d) = 1 report "1 bit isn't set : " & to_hstring(d) severity failure;
+            assert d(i) = '1' report "wrong bit set, its not " & integer'image(i) severity failure;
         end loop;
         
         stop <= true;

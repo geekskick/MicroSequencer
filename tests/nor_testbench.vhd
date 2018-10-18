@@ -39,12 +39,12 @@ begin
         for i in 0 to width-1 loop
             d <= (i => '1', others => '0');
             wait for 1ns;
-            assert q = '0' report "Q isn't 0 when " & integer'image(i) & " : " & std_logic'image(q); 
+            assert q = '0' report "Q isn't 0 when " & integer'image(i) & " : " & std_logic'image(q) severity failure; 
         end loop;
         
         d <= (others => '0');
         wait for 1ns;
-        assert q = '1' report "Q isn't 1 : " & std_logic'image(q);
+        assert q = '1' report "Q isn't 1 : " & std_logic'image(q) severity failure;
         
         stop <= true;
         report "-------------DONE--------------";

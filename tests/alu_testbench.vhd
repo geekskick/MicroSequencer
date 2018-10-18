@@ -46,11 +46,11 @@ begin
         operand2 <= (0 => '1', others => '0');
         cmd <= alu_add1;
         wait for 1ns;
-        assert to_integer(unsigned(q)) = 2 report "Add didnt work : " & to_hstring(q);
+        assert to_integer(unsigned(q)) = 2 report "Add didnt work : " & to_hstring(q) severity failure;
         
         cmd <= alu_sub1;
         wait for 1ns;
-        assert to_integer(unsigned(q)) = 0 report "Sub didnt work : " & to_hstring(q);
+        assert to_integer(unsigned(q)) = 0 report "Sub didnt work : " & to_hstring(q) severity failure;
         
         cmd <= alu_inac1;
         wait for 1ns;
@@ -58,7 +58,7 @@ begin
         
         cmd <= alu_clac1;
         wait for 1ns;
-        assert to_integer(unsigned(q)) = 0 report "clac didnt work : " & to_hstring(q);
+        assert to_integer(unsigned(q)) = 0 report "clac didnt work : " & to_hstring(q) severity failure;
         
         cmd <= alu_and1;
         wait for 1ns;
@@ -66,33 +66,33 @@ begin
         
         operand2 <= (1 => '1', others => '0');
         wait for 1ns;
-        assert to_integer(unsigned(q)) = 0 report "And didnt work : " & to_hstring(q);
+        assert to_integer(unsigned(q)) = 0 report "And didnt work : " & to_hstring(q) severity failure;
         
         cmd <= alu_or1;
         wait for 1ns;
-        assert to_integer(unsigned(q)) = 3 report "or didnt work : " & to_hstring(q);
+        assert to_integer(unsigned(q)) = 3 report "or didnt work : " & to_hstring(q) severity failure;
         
         cmd <= alu_not1;
         wait for 1ns;
-        assert q = X"fe" report "not didnt work : " & to_hstring(q);
+        assert q = X"fe" report "not didnt work : " & to_hstring(q) severity failure;
         
         cmd <= alu_xor1;
         operand1 <= (0 => '1', 1 => '1', others => '0');
         operand2 <= (0 => '1', others => '0');
         wait for 1ns;
-        assert q = X"02" report "xor didnt work : " & to_hstring(q);
+        assert q = X"02" report "xor didnt work : " & to_hstring(q) severity failure;
         
         cmd <= alu_op2_thru;
         wait for 1ns;
-        assert q = operand2 report "op2 through didnt work : " & to_hstring(q);
+        assert q = operand2 report "op2 through didnt work : " & to_hstring(q) severity failure;
         
         cmd <= alu_lshift;
         wait for 1ns;
-        assert q = X"06" report "sll didnt work : " & to_hstring(q);
+        assert q = X"06" report "sll didnt work : " & to_hstring(q) severity failure;
         
         cmd <= alu_rshift;
         wait for 1ns;
-        assert q = X"01" report "srl didnt work : " & to_hstring(q);
+        assert q = X"01" report "srl didnt work : " & to_hstring(q) severity failure;
         
         stop <= true;
         report "------------DONE-------------";

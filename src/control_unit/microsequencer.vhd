@@ -28,7 +28,7 @@ architecture behavioural of microsequencer is
         );
     end component;
  
-    signal alu_cmd_i  : std_logic_vector(ALU_CMD_WIDTH-1 downto 0);    
+    signal alu_cmd_i  : std_logic_vector(MICROCODE_ALU_LEN-1 downto 0);    
     signal map_out    : std_logic_vector(MICROCODE_ADDR_WIDTH-1 downto 0) := (others => '0'); -- the IR value as an address
     signal plus_one   : std_logic_vector(MICROCODE_ADDR_WIDTH-1 downto 0) := (others => '0'); -- the next microinstruction
     signal return_add : std_logic_vector(MICROCODE_ADDR_WIDTH-1 downto 0) := (others => '0'); -- the return from subroutine address

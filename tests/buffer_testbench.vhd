@@ -47,14 +47,14 @@ begin
         -- wait at bit to allow the device to settle from X
         wait for period/10; 
         
-        assert outp = X"ZZZZ" report "Bus is outputting : " & to_hstring(outp);
+        assert outp = X"ZZZZ" report "Bus is outputting : " & to_hstring(outp) severity failure;
         
         en <= '1';
         
         -- wait at bit to allow the device to settle from X
         wait for period/10;
         
-        assert inp = outp report "Buffer isn't outputting : " & to_hstring(outp);
+        assert inp = outp report "Buffer isn't outputting : " & to_hstring(outp) severity failure;
         
         
         stop <= true;
